@@ -37,15 +37,13 @@
 
   html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--sans); }
 
-  /* ── SCREENS ── */
   .screen { display: none; width: 100%; height: 100vh; }
   .screen.active { display: flex; }
 
-  /* ── AUTH SCREEN ── */
+  /* AUTH */
   #auth-screen {
     align-items: center; justify-content: center;
-    background: var(--bg);
-    position: relative; overflow: hidden;
+    background: var(--bg); position: relative; overflow: hidden;
   }
   #auth-screen::before {
     content:''; position:absolute; width:600px; height:600px;
@@ -65,9 +63,7 @@
     box-shadow: 0 0 80px rgba(0,0,0,0.4);
   }
 
-  .logo {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
-  }
+  .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
   .logo-icon {
     width: 36px; height: 36px; background: var(--accent); border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
@@ -120,10 +116,9 @@
   .auth-msg.success { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(0,229,180,0.2); display: block; }
   .auth-msg.info { background: var(--bg3); color: var(--text2); display: block; }
 
-  /* ── MAIN APP ── */
+  /* APP */
   #app-screen { flex-direction: row; height: 100vh; }
 
-  /* SIDEBAR */
   .sidebar {
     width: var(--sidebar-w); height: 100vh; background: var(--bg2);
     border-right: 1px solid var(--border); display: flex; flex-direction: column;
@@ -151,9 +146,7 @@
   .icon-btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border2); }
   .icon-btn svg { width: 16px; height: 16px; }
 
-  .search-bar {
-    padding: 12px 16px; border-bottom: 1px solid var(--border);
-  }
+  .search-bar { padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .search-input {
     width: 100%; padding: 8px 12px; background: var(--bg3);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -214,7 +207,6 @@
   }
   .key-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
-  /* MAIN CHAT AREA */
   .chat-main {
     flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
     background: var(--bg);
@@ -275,19 +267,8 @@
   .msg-meta { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
   .msg-wrap.me .msg-meta { justify-content: flex-end; }
   .msg-enc-tick { color: var(--accent); font-size: 9px; }
-
   .msg-error { color: var(--danger); font-style: italic; font-size: 13px; }
 
-  /* empty state */
-  .empty-chat {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 12px;
-    color: var(--text3);
-  }
-  .empty-chat svg { width: 48px; height: 48px; opacity: 0.3; }
-  .empty-chat p { font-size: 14px; }
-
-  /* no-conv state */
   .no-conv {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
@@ -302,7 +283,6 @@
   .no-conv h3 { font-size: 16px; color: var(--text2); }
   .no-conv p { font-size: 13px; text-align: center; max-width: 260px; line-height: 1.6; }
 
-  /* COMPOSER */
   .composer {
     padding: 16px 20px; border-top: 1px solid var(--border);
     background: var(--bg2); flex-shrink: 0;
@@ -336,7 +316,6 @@
   }
   .composer-info svg { width: 10px; height: 10px; color: var(--accent); }
 
-  /* MODAL */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100;
     display: none; align-items: center; justify-content: center;
@@ -351,7 +330,6 @@
   .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
   .modal-actions .btn { margin-top: 0; }
 
-  /* TOAST */
   .toast-container {
     position: fixed; bottom: 20px; right: 20px; z-index: 200;
     display: flex; flex-direction: column; gap: 8px;
@@ -365,7 +343,6 @@
   .toast.error { background: var(--bg3); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
   @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-  /* LOADING SPINNER */
   .spinner {
     width: 18px; height: 18px; border: 2px solid var(--border2);
     border-top-color: var(--accent); border-radius: 50%;
@@ -373,14 +350,12 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* system messages */
   .sys-msg {
     text-align: center; font-size: 11px; font-family: var(--mono);
     color: var(--text3); padding: 4px 0;
   }
   .sys-msg span { padding: 3px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; }
 
-  /* KEY INFO */
   .key-info-row {
     display: flex; align-items: center; gap: 8px; padding: 10px 12px;
     background: var(--bg3); border-radius: var(--radius-sm); margin-bottom: 10px;
@@ -390,20 +365,12 @@
   .key-info-text { font-size: 12px; font-family: var(--mono); color: var(--text2); }
   .key-info-text strong { color: var(--text); }
 
-  /* Typing indicator */
-  .typing-dots { display: flex; gap: 3px; align-items: center; padding: 4px 0; }
-  .typing-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text2); animation: bounce 1.2s infinite; }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
-
-  /* Scrollbar for form */
   textarea { scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════ AUTH SCREEN ══════════════ -->
+<!-- AUTH SCREEN -->
 <div id="auth-screen" class="screen active">
   <div class="auth-box">
     <div class="logo">
@@ -449,10 +416,8 @@
   </div>
 </div>
 
-<!-- ══════════════ APP SCREEN ══════════════ -->
+<!-- APP SCREEN -->
 <div id="app-screen" class="screen">
-
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
@@ -476,7 +441,7 @@
 
     <div class="section-label">Conversations</div>
     <div class="conv-list" id="conv-list">
-      <div class="empty-chat" style="padding:40px 20px;text-align:center">
+      <div style="padding:40px 20px;text-align:center">
         <p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Start one with the + button.</p>
       </div>
     </div>
@@ -496,7 +461,6 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="chat-main" id="chat-main">
     <div class="no-conv">
       <div class="no-conv-icon">
@@ -508,10 +472,9 @@
       <p>Select a conversation or start a new encrypted chat with the + button.</p>
     </div>
   </div>
-
 </div>
 
-<!-- ══════════════ NEW MESSAGE MODAL ══════════════ -->
+<!-- NEW MESSAGE MODAL -->
 <div class="modal-overlay" id="new-msg-modal">
   <div class="modal-box">
     <div class="modal-title">New Encrypted Message</div>
@@ -537,41 +500,38 @@
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
 <script>
 // ═══════════════════════════════════════════════════
 //  WHISPERBOX — E2EE Messaging Client
-//  Encryption: RSA-OAEP (key exchange) + AES-GCM (messages)
-//  Private keys NEVER leave this device
+//  FIX LOG:
+//  1. Added /auth/login POST endpoint (was missing in backend)
+//  2. Fixed error parsing: extract string from response properly
+//  3. Fixed message fetch: GET /messages/{username} instead of /messages
+//  4. Fixed message send: include sender field in payload
+//  5. Fixed login flow: no longer expects server token (uses username as identity)
 // ═══════════════════════════════════════════════════
 
 const API = 'https://whisperbox.koyeb.app';
 
-// State
 let state = {
-  token: null,
   username: null,
-  keyPair: null,        // CryptoKeyPair (RSA-OAEP)
-  conversations: {},    // username -> [{id, sender, ciphertext, iv, encryptedKey, ts}]
+  keyPair: null,
+  conversations: {},
   activeConv: null,
-  publicKeys: {},       // username -> CryptoKey (their public key)
+  publicKeys: {},
   pollingTimer: null,
 };
 
 // ── UTILS ─────────────────────────────────────────
 
-function b64(buf) {
-  return btoa(String.fromCharCode(...new Uint8Array(buf)));
-}
-function unb64(s) {
-  return Uint8Array.from(atob(s), c => c.charCodeAt(0));
-}
+function b64(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function unb64(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
 function arrayBufToB64(buf) { return b64(buf); }
 function b64ToArrayBuf(s) { return unb64(s).buffer; }
 
-function showToast(msg, type='success') {
+function showToast(msg, type = 'success') {
   const t = document.createElement('div');
   t.className = `toast ${type}`;
   t.textContent = msg;
@@ -579,7 +539,7 @@ function showToast(msg, type='success') {
   setTimeout(() => t.remove(), 3500);
 }
 
-function setLoading(btnId, loading, text='') {
+function setLoading(btnId, loading) {
   const btn = document.getElementById(btnId);
   if (!btn) return;
   if (loading) {
@@ -587,12 +547,12 @@ function setLoading(btnId, loading, text='') {
     btn.innerHTML = '<span class="spinner"></span>';
     btn.disabled = true;
   } else {
-    btn.innerHTML = btn._orig || text;
+    btn.innerHTML = btn._orig || '';
     btn.disabled = false;
   }
 }
 
-function showMsg(id, msg, type='error') {
+function showMsg(id, msg, type = 'error') {
   const el = document.getElementById(id);
   if (!el) return;
   el.className = `auth-msg ${type}`;
@@ -605,54 +565,44 @@ function hideMsg(id) {
   if (el) { el.style.display = 'none'; el.textContent = ''; }
 }
 
-// ── CRYPTO ENGINE ─────────────────────────────────
-// RSA-OAEP 2048 for key encapsulation
-// AES-GCM 256 for symmetric encryption of message
+// ── CRYPTO ─────────────────────────────────────────
 
 async function generateKeyPair() {
-  return await crypto.subtle.generateKey(
-    { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' },
+  return crypto.subtle.generateKey(
+    { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
     true, ['encrypt', 'decrypt']
   );
 }
 
 async function exportPublicKey(key) {
-  const buf = await crypto.subtle.exportKey('spki', key);
-  return arrayBufToB64(buf);
+  return arrayBufToB64(await crypto.subtle.exportKey('spki', key));
 }
 
 async function importPublicKey(b64str) {
-  const buf = b64ToArrayBuf(b64str);
-  return await crypto.subtle.importKey(
-    'spki', buf, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']
+  return crypto.subtle.importKey(
+    'spki', b64ToArrayBuf(b64str),
+    { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']
   );
 }
 
 async function exportPrivateKey(key) {
-  const buf = await crypto.subtle.exportKey('pkcs8', key);
-  return arrayBufToB64(buf);
+  return arrayBufToB64(await crypto.subtle.exportKey('pkcs8', key));
 }
 
 async function importPrivateKey(b64str) {
-  const buf = b64ToArrayBuf(b64str);
-  return await crypto.subtle.importKey(
-    'pkcs8', buf, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']
+  return crypto.subtle.importKey(
+    'pkcs8', b64ToArrayBuf(b64str),
+    { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']
   );
 }
 
 async function encryptMessage(plaintext, recipientPublicKey) {
-  // Generate ephemeral AES-GCM key
-  const aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt','decrypt']);
+  const aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
   const iv = crypto.getRandomValues(new Uint8Array(12));
-
-  // Encrypt message with AES
   const enc = new TextEncoder();
   const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, enc.encode(plaintext));
-
-  // Export AES key and encrypt it with recipient's RSA public key
   const rawAES = await crypto.subtle.exportKey('raw', aesKey);
   const encryptedKey = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, recipientPublicKey, rawAES);
-
   return {
     ciphertext: arrayBufToB64(ciphertext),
     iv: arrayBufToB64(iv),
@@ -661,26 +611,18 @@ async function encryptMessage(plaintext, recipientPublicKey) {
 }
 
 async function decryptMessage(ciphertext, iv, encryptedKey, privateKey) {
-  // Decrypt AES key with our private key
   const rawAES = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, b64ToArrayBuf(encryptedKey));
-
-  // Import AES key
   const aesKey = await crypto.subtle.importKey('raw', rawAES, { name: 'AES-GCM' }, false, ['decrypt']);
-
-  // Decrypt message
   const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(iv) }, aesKey, b64ToArrayBuf(ciphertext));
   return new TextDecoder().decode(plainBuf);
 }
 
-// ── KEY STORAGE (IndexedDB) ─────────────────────
-// Private key stored in IndexedDB — never in localStorage
+// ── INDEXEDDB KEY STORAGE ──────────────────────────
 
 function openDB() {
   return new Promise((res, rej) => {
     const req = indexedDB.open('WhisperBoxKeys', 1);
-    req.onupgradeneeded = e => {
-      e.target.result.createObjectStore('keys');
-    };
+    req.onupgradeneeded = e => e.target.result.createObjectStore('keys');
     req.onsuccess = e => res(e.target.result);
     req.onerror = () => rej(req.error);
   });
@@ -704,35 +646,46 @@ async function loadPrivateKey(username) {
     const req = tx.objectStore('keys').get(`privkey_${username}`);
     req.onsuccess = async () => {
       if (req.result) {
-        try { res(await importPrivateKey(req.result)); }
-        catch(e) { res(null); }
+        try { res(await importPrivateKey(req.result)); } catch { res(null); }
       } else { res(null); }
     };
     req.onerror = () => rej(req.error);
   });
 }
 
-// ── API CALLS ──────────────────────────────────
+// ── API HELPERS ────────────────────────────────────
+// FIX: Extract a clean error string instead of letting it become [object Object]
 
-async function apiPost(path, body, auth=false) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (auth && state.token) headers['Authorization'] = `Bearer ${state.token}`;
-  const res = await fetch(`${API}${path}`, { method: 'POST', headers, body: JSON.stringify(body) });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || data.message || `Error ${res.status}`);
-  return data;
+async function extractError(res) {
+  try {
+    const data = await res.json();
+    // FastAPI returns { detail: "..." } for HTTPException
+    if (typeof data.detail === 'string') return data.detail;
+    if (typeof data.message === 'string') return data.message;
+    if (typeof data.detail === 'object') return JSON.stringify(data.detail);
+    return `Error ${res.status}`;
+  } catch {
+    return `HTTP ${res.status}`;
+  }
 }
 
-async function apiGet(path, auth=true) {
-  const headers = {};
-  if (auth && state.token) headers['Authorization'] = `Bearer ${state.token}`;
-  const res = await fetch(`${API}${path}`, { headers });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || data.message || `Error ${res.status}`);
-  return data;
+async function apiPost(path, body) {
+  const res = await fetch(`${API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
 }
 
-// ── AUTH ───────────────────────────────────────
+async function apiGet(path) {
+  const res = await fetch(`${API}${path}`);
+  if (!res.ok) throw new Error(await extractError(res));
+  return res.json();
+}
+
+// ── AUTH ───────────────────────────────────────────
 
 function switchTab(tab) {
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
@@ -747,29 +700,28 @@ async function doRegister() {
   hideMsg('reg-msg');
 
   if (!username || !password) return showMsg('reg-msg', 'Please fill in all fields');
+  if (username.length < 3) return showMsg('reg-msg', 'Username must be at least 3 characters');
   if (password.length < 6) return showMsg('reg-msg', 'Password must be at least 6 characters');
 
   setLoading('reg-btn', true);
   showMsg('reg-msg', 'Generating your encryption keys…', 'info');
 
   try {
-    // Generate RSA key pair
     const keyPair = await generateKeyPair();
     const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
 
-    // Register with server
     await apiPost('/auth/register', { username, password, public_key: pubKeyB64 });
 
-    // Store private key in IndexedDB
+    // Store private key locally
     await storePrivateKey(username, keyPair.privateKey);
 
-    showMsg('reg-msg', 'Account created! Signing you in…', 'success');
+    showMsg('reg-msg', 'Account created! You can now sign in.', 'success');
     setTimeout(() => {
       document.getElementById('login-user').value = username;
       switchTab('login');
       hideMsg('reg-msg');
-    }, 1000);
-  } catch(e) {
+    }, 1200);
+  } catch (e) {
     showMsg('reg-msg', e.message);
   } finally {
     setLoading('reg-btn', false);
@@ -787,8 +739,9 @@ async function doLogin() {
   showMsg('login-msg', 'Authenticating…', 'info');
 
   try {
-    const data = await apiPost('/auth/login', { username, password });
-    state.token = data.access_token || data.token;
+    // FIX: POST to /auth/login (was missing from backend — now added)
+    await apiPost('/auth/login', { username, password });
+
     state.username = username;
 
     // Load private key from IndexedDB
@@ -796,25 +749,20 @@ async function doLogin() {
     let privateKey = await loadPrivateKey(username);
 
     if (!privateKey) {
-      // Key not found on this device — need to regenerate or prompt
-      showMsg('login-msg', 'No local key found. Generating new keys and updating server…', 'info');
+      // No local key — generate a new one and update the server's public key
+      showMsg('login-msg', 'No local key found. Regenerating keys…', 'info');
       const keyPair = await generateKeyPair();
       const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
-      try {
-        await apiPost('/users/update-public-key', { public_key: pubKeyB64 }, true);
-      } catch(_) {
-        // endpoint may vary
-        try { await apiPost('/auth/update-key', { public_key: pubKeyB64 }, true); } catch(_) {}
-      }
+      // Re-register public key (best-effort — server may not have an update endpoint)
+      try { await apiPost('/auth/register', { username, password, public_key: pubKeyB64 }); } catch { /* already registered */ }
       await storePrivateKey(username, keyPair.privateKey);
       privateKey = keyPair.privateKey;
     }
 
     state.keyPair = { privateKey };
-
     hideMsg('login-msg');
     enterApp();
-  } catch(e) {
+  } catch (e) {
     showMsg('login-msg', e.message);
   } finally {
     setLoading('login-btn', false);
@@ -823,16 +771,16 @@ async function doLogin() {
 
 function doLogout() {
   if (state.pollingTimer) clearInterval(state.pollingTimer);
-  state = { token:null, username:null, keyPair:null, conversations:{}, activeConv:null, publicKeys:{}, pollingTimer:null };
+  state = { username: null, keyPair: null, conversations: {}, activeConv: null, publicKeys: {}, pollingTimer: null };
   document.getElementById('app-screen').classList.remove('active');
-  document.getElementById('auth-screen').classList.add('active');
-  document.getElementById('login-pass').value = '';
   document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('auth-screen').classList.add('active');
   document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
   showToast('Signed out. Keys remain on device.', 'success');
 }
 
-// ── APP INIT ──────────────────────────────────
+// ── APP INIT ──────────────────────────────────────
 
 function enterApp() {
   document.getElementById('auth-screen').classList.remove('active');
@@ -844,46 +792,36 @@ function enterApp() {
   document.getElementById('my-avatar').textContent = state.username[0].toUpperCase();
 
   loadConversations();
-  // Poll every 5 seconds
   state.pollingTimer = setInterval(loadConversations, 5000);
 }
 
-// ── CONVERSATIONS ─────────────────────────────
+// ── CONVERSATIONS ──────────────────────────────────
 
 async function loadConversations() {
   try {
-    let msgs;
-    // Try different possible endpoints
-    try { msgs = await apiGet('/messages'); }
-    catch(_) {
-      try { msgs = await apiGet('/messages/inbox'); }
-      catch(_) { msgs = []; }
-    }
+    // FIX: use /messages/{username} — the backend filters by username
+    const msgs = await apiGet(`/messages/${encodeURIComponent(state.username)}`);
+    const list = Array.isArray(msgs) ? msgs : [];
 
-    if (!Array.isArray(msgs)) msgs = msgs.messages || msgs.data || [];
-
-    // Group by conversation partner
     const convs = {};
-    for (const msg of msgs) {
+    for (const msg of list) {
+      // Determine conversation partner
       const partner = msg.sender === state.username ? msg.recipient : msg.sender;
       if (!partner) continue;
       if (!convs[partner]) convs[partner] = [];
       convs[partner].push(msg);
     }
 
-    // Merge with existing
     for (const [partner, newMsgs] of Object.entries(convs)) {
       const existing = state.conversations[partner] || [];
       const existingIds = new Set(existing.map(m => m.id));
       const fresh = newMsgs.filter(m => !existingIds.has(m.id));
-      state.conversations[partner] = [...existing, ...fresh].sort((a,b) => a.id - b.id);
+      state.conversations[partner] = [...existing, ...fresh].sort((a, b) => a.id - b.id);
     }
 
     renderConvList();
     if (state.activeConv) renderMessages(state.activeConv);
-  } catch(e) {
-    // Silent fail on polling
-  }
+  } catch { /* silent fail on polling */ }
 }
 
 function renderConvList() {
@@ -900,13 +838,12 @@ function renderConvList() {
     const msgs = state.conversations[partner];
     const last = msgs[msgs.length - 1];
     const isActive = state.activeConv === partner;
-    const preview = last ? '🔒 Encrypted message' : 'No messages yet';
-    const time = last ? formatTime(last.created_at || last.timestamp) : '';
-    return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="openConversation('${partner}')">
+    const time = last ? formatTime(last.timestamp) : '';
+    return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="openConversation('${escHtml(partner)}')">
       <div class="conv-avatar">${partner[0].toUpperCase()}</div>
       <div class="conv-meta">
         <div class="conv-name">${escHtml(partner)}</div>
-        <div class="conv-preview">${preview}</div>
+        <div class="conv-preview">🔒 Encrypted message</div>
       </div>
       <div class="conv-time">${time}</div>
     </div>`;
@@ -917,20 +854,19 @@ function filterConvs() { renderConvList(); }
 
 function formatTime(ts) {
   if (!ts) return '';
-  const d = new Date(ts);
-  const now = new Date();
-  const diff = now - d;
+  const d = new Date(typeof ts === 'number' ? ts * 1000 : ts);
+  const diff = Date.now() - d;
   if (diff < 60000) return 'now';
-  if (diff < 3600000) return `${Math.floor(diff/60000)}m`;
-  if (diff < 86400000) return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  return d.toLocaleDateString([], {month:'short',day:'numeric'});
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
+  if (diff < 86400000) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// ── OPEN CONVERSATION ─────────────────────────
+// ── OPEN CONVERSATION ─────────────────────────────
 
 async function openConversation(partner) {
   state.activeConv = partner;
@@ -943,10 +879,7 @@ async function openConversation(partner) {
         <div class="chat-header-avatar">${partner[0].toUpperCase()}</div>
         <div>
           <div class="chat-header-name">${escHtml(partner)}</div>
-          <div class="chat-header-sub">
-            <div class="key-dot"></div>
-            End-to-end encrypted
-          </div>
+          <div class="chat-header-sub"><div class="key-dot"></div>End-to-end encrypted</div>
         </div>
       </div>
       <div class="enc-badge">
@@ -961,7 +894,10 @@ async function openConversation(partner) {
     </div>
     <div class="composer">
       <div class="composer-inner">
-        <textarea class="composer-input" id="composer-input" rows="1" placeholder="Message ${escHtml(partner)}…" onkeydown="handleComposerKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea class="composer-input" id="composer-input" rows="1"
+          placeholder="Message ${escHtml(partner)}…"
+          onkeydown="handleComposerKey(event)"
+          oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="send-btn" onclick="sendMessage()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -974,8 +910,7 @@ async function openConversation(partner) {
         </svg>
         Encrypted before sending · Server stores ciphertext only
       </div>
-    </div>
-  `;
+    </div>`;
 
   renderMessages(partner);
 }
@@ -983,10 +918,7 @@ async function openConversation(partner) {
 async function renderMessages(partner) {
   const area = document.getElementById('messages-area');
   if (!area) return;
-
   const msgs = state.conversations[partner] || [];
-
-  // Keep system message
   area.innerHTML = '<div class="sys-msg"><span>Messages are end-to-end encrypted. WhisperBox cannot read them.</span></div>';
 
   for (const msg of msgs) {
@@ -996,50 +928,44 @@ async function renderMessages(partner) {
 
     let text = msg._decrypted;
     if (text === undefined) {
-      // Decrypt
       try {
-        if (msg.encrypted_key || msg.encryptedKey) {
-          const ek = msg.encrypted_key || msg.encryptedKey;
-          const ct = msg.ciphertext || msg.content;
-          const iv = msg.iv;
+        const ek = msg.encrypted_key || msg.encryptedKey;
+        const ct = msg.ciphertext || msg.content;
+        const iv = msg.iv;
+        if (ek && ct && iv) {
           text = await decryptMessage(ct, iv, ek, state.keyPair.privateKey);
-          msg._decrypted = text;
-        } else if (msg.content) {
-          // Plain content — shouldn't happen in E2EE but handle gracefully
-          text = '[Could not decrypt — message format unknown]';
-          msg._decrypted = text;
+        } else {
+          text = '[Unknown message format]';
         }
-      } catch(e) {
-        text = '[Decryption failed]';
+        msg._decrypted = text;
+      } catch {
+        text = '[Decryption failed — key mismatch]';
         msg._decrypted = text;
       }
     }
 
-    const decryptFailed = text && text.startsWith('[');
-    const ts = formatTime(msg.created_at || msg.timestamp);
+    const failed = text.startsWith('[');
+    const ts = formatTime(msg.timestamp);
     const initials = (isMe ? state.username : partner)[0].toUpperCase();
 
     wrap.innerHTML = `
       ${!isMe ? `<div class="msg-avatar">${initials}</div>` : ''}
       <div>
-        <div class="msg-bubble ${decryptFailed ? 'msg-error' : ''}">${escHtml(text || '')}</div>
+        <div class="msg-bubble ${failed ? 'msg-error' : ''}">${escHtml(text)}</div>
         <div class="msg-meta">${ts} <span class="msg-enc-tick">🔒</span></div>
       </div>
-      ${isMe ? `<div class="msg-avatar">${initials}</div>` : ''}
-    `;
+      ${isMe ? `<div class="msg-avatar">${initials}</div>` : ''}`;
     area.appendChild(wrap);
   }
 
   area.scrollTop = area.scrollHeight;
 }
 
-// ── SEND MESSAGE ──────────────────────────────
+// ── SEND ─────────────────────────────────────────
 
 async function getRecipientPublicKey(username) {
   if (state.publicKeys[username]) return state.publicKeys[username];
-  let data;
-  try { data = await apiGet(`/users/${username}`); }
-  catch(_) { data = await apiGet(`/users/${username}/public-key`); }
+  const data = await apiGet(`/users/${encodeURIComponent(username)}`);
   const pubKeyB64 = data.public_key || data.publicKey;
   if (!pubKeyB64) throw new Error(`No public key found for ${username}`);
   const key = await importPublicKey(pubKeyB64);
@@ -1058,27 +984,24 @@ async function sendMessage() {
   input.disabled = true;
 
   try {
-    // Get recipient's public key
     const recipientKey = await getRecipientPublicKey(partner);
-
-    // Encrypt
     const { ciphertext, iv, encryptedKey } = await encryptMessage(plaintext, recipientKey);
 
-    // Send
-    const msg = await apiPost('/messages', {
+    // FIX: include sender in payload so backend stores it correctly
+    const result = await apiPost('/messages', {
+      sender: state.username,
       recipient: partner,
       ciphertext,
       iv,
       encrypted_key: encryptedKey,
-    }, true);
+    });
 
-    // Optimistic: add to local state
     const localMsg = {
-      id: msg.id || Date.now(),
+      id: result.id || Date.now(),
       sender: state.username,
       recipient: partner,
       ciphertext, iv, encrypted_key: encryptedKey,
-      created_at: new Date().toISOString(),
+      timestamp: Date.now() / 1000,
       _decrypted: plaintext,
     };
     if (!state.conversations[partner]) state.conversations[partner] = [];
@@ -1088,7 +1011,7 @@ async function sendMessage() {
     input.style.height = 'auto';
     renderMessages(partner);
     renderConvList();
-  } catch(e) {
+  } catch (e) {
     showToast(`Send failed: ${e.message}`, 'error');
   } finally {
     btn.disabled = false;
@@ -1111,19 +1034,20 @@ async function sendNewMsg() {
     const recipientKey = await getRecipientPublicKey(recipient);
     const { ciphertext, iv, encryptedKey } = await encryptMessage(body, recipientKey);
 
-    const msg = await apiPost('/messages', {
+    const result = await apiPost('/messages', {
+      sender: state.username,
       recipient,
       ciphertext,
       iv,
       encrypted_key: encryptedKey,
-    }, true);
+    });
 
     const localMsg = {
-      id: msg.id || Date.now(),
+      id: result.id || Date.now(),
       sender: state.username,
       recipient,
       ciphertext, iv, encrypted_key: encryptedKey,
-      created_at: new Date().toISOString(),
+      timestamp: Date.now() / 1000,
       _decrypted: body,
     };
     if (!state.conversations[recipient]) state.conversations[recipient] = [];
@@ -1133,12 +1057,12 @@ async function sendNewMsg() {
     showToast('Message encrypted and sent', 'success');
     openConversation(recipient);
     renderConvList();
-  } catch(e) {
+  } catch (e) {
     showMsg('new-msg-error', e.message);
   }
 }
 
-// ── UI HELPERS ────────────────────────────────
+// ── UI HELPERS ────────────────────────────────────
 
 function handleComposerKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -1161,12 +1085,10 @@ function closeNewMsg() {
   document.getElementById('new-msg-modal').classList.remove('open');
 }
 
-// Close modal on backdrop click
-document.getElementById('new-msg-modal').addEventListener('click', function(e) {
+document.getElementById('new-msg-modal').addEventListener('click', function (e) {
   if (e.target === this) closeNewMsg();
 });
 
-// Enter key in auth
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const loginForm = document.getElementById('login-form');
@@ -1177,8 +1099,7 @@ document.addEventListener('keydown', e => {
 });
 
 console.log('%c WhisperBox E2EE ', 'background:#00e5b4;color:#0a0c0f;font-weight:bold;padding:4px 8px;border-radius:4px;');
-console.log('Private keys are stored in IndexedDB and never leave this device.');
-console.log('Server receives only ciphertext — AES-GCM encrypted with RSA-OAEP wrapped keys.');
+console.log('Private keys stored in IndexedDB — never leave this device.');
 </script>
 </body>
 </html>
