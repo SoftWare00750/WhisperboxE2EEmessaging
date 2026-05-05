@@ -40,7 +40,7 @@
   .screen { display: none; width: 100%; height: 100vh; }
   .screen.active { display: flex; }
 
-  /* AUTH */
+  /* ── AUTH ──────────────────────────────────────── */
   #auth-screen {
     align-items: center; justify-content: center;
     background: var(--bg); position: relative; overflow: hidden;
@@ -116,7 +116,7 @@
   .auth-msg.success { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(0,229,180,0.2); display: block; }
   .auth-msg.info { background: var(--bg3); color: var(--text2); display: block; }
 
-  /* APP */
+  /* ── APP ───────────────────────────────────────── */
   #app-screen { flex-direction: row; height: 100vh; }
 
   .sidebar {
@@ -124,9 +124,11 @@
     border-right: 1px solid var(--border); display: flex; flex-direction: column;
     flex-shrink: 0;
   }
+
   .sidebar-header {
     height: var(--header-h); padding: 0 16px; border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
   }
   .sidebar-logo { display: flex; align-items: center; gap: 8px; }
   .sidebar-logo-icon {
@@ -137,6 +139,20 @@
   .sidebar-logo-name { font-size: 16px; font-weight: 700; }
   .sidebar-logo-name span { color: var(--accent); }
 
+  /* ── Sidebar tab bar ─────────────────────────── */
+  .sidebar-tabs {
+    display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .sidebar-tab {
+    flex: 1; padding: 11px 0; border: none; background: none; cursor: pointer;
+    color: var(--text3); font-family: var(--sans); font-size: 13px; font-weight: 600;
+    border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .sidebar-tab:hover { color: var(--text2); }
+  .sidebar-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .sidebar-panel { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
   .icon-btn {
     width: 34px; height: 34px; border-radius: var(--radius-sm);
     background: transparent; border: 1px solid var(--border); cursor: pointer;
@@ -146,7 +162,7 @@
   .icon-btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border2); }
   .icon-btn svg { width: 16px; height: 16px; }
 
-  .search-bar { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .search-bar { padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .search-input {
     width: 100%; padding: 8px 12px; background: var(--bg3);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -157,14 +173,18 @@
   .search-input::placeholder { color: var(--text3); }
 
   .section-label {
-    padding: 12px 16px 6px;
+    padding: 12px 16px 6px; flex-shrink: 0;
     font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
     color: var(--text3); font-family: var(--mono);
   }
 
-  .conv-list { flex: 1; overflow-y: auto; }
-  .conv-list::-webkit-scrollbar { width: 4px; }
-  .conv-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+  .conv-list, .people-list {
+    flex: 1; overflow-y: auto;
+  }
+  .conv-list::-webkit-scrollbar,
+  .people-list::-webkit-scrollbar { width: 4px; }
+  .conv-list::-webkit-scrollbar-thumb,
+  .people-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
   .conv-item {
     padding: 12px 16px; cursor: pointer; transition: background 0.15s;
@@ -177,6 +197,23 @@
     content: ''; position: absolute; left: 0; top: 0; bottom: 0;
     width: 3px; background: var(--accent);
   }
+
+  /* ── People panel ────────────────────────────── */
+  .people-item {
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s;
+  }
+  .people-item:hover { background: var(--bg3); }
+  .people-item:hover .people-msg-btn { opacity: 1; }
+  .people-msg-btn {
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    background: var(--accent-dim); border: 1px solid rgba(0,229,180,0.25); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); transition: all 0.15s; opacity: 0; flex-shrink: 0;
+  }
+  .people-msg-btn:hover { background: var(--accent-dim2); }
+  .people-msg-btn svg { width: 14px; height: 14px; }
+  .people-online { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
   .conv-avatar {
     width: 38px; height: 38px; border-radius: 50%; background: var(--bg4);
@@ -191,7 +228,7 @@
 
   .sidebar-footer {
     padding: 12px 16px; border-top: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
   }
   .my-avatar {
     width: 34px; height: 34px; border-radius: 50%; background: var(--accent-dim);
@@ -207,6 +244,7 @@
   }
   .key-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
+  /* ── Chat main ───────────────────────────────── */
   .chat-main {
     flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
     background: var(--bg);
@@ -316,20 +354,56 @@
   }
   .composer-info svg { width: 10px; height: 10px; color: var(--accent); }
 
+  /* ── Modals ──────────────────────────────────── */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100;
     display: none; align-items: center; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal-box {
-    width: 380px; background: var(--bg2); border: 1px solid var(--border2);
+    width: 420px; background: var(--bg2); border: 1px solid var(--border2);
     border-radius: 20px; padding: 28px;
     box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+    max-height: 90vh; display: flex; flex-direction: column;
   }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; flex-shrink: 0; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; flex-shrink: 0; }
   .modal-actions .btn { margin-top: 0; }
+  .modal-scroll { overflow-y: auto; flex: 1; }
+  .modal-scroll::-webkit-scrollbar { width: 4px; }
+  .modal-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
+  /* User pick list inside modal */
+  .user-pick-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+  .user-pick-label {
+    font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--text3); font-family: var(--mono); margin-bottom: 6px;
+  }
+  .user-pick-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+  }
+  .user-pick-item:hover { background: var(--bg4); border-color: var(--border2); }
+  .user-pick-item.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .user-pick-avatar {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--bg4);
+    border: 1px solid var(--border2); display: flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent);
+    flex-shrink: 0; text-transform: uppercase;
+  }
+  .user-pick-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .user-pick-handle { font-size: 11px; font-family: var(--mono); color: var(--text3); }
+  .user-pick-tick {
+    margin-left: auto; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent); display: none; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .user-pick-item.selected .user-pick-tick { display: flex; }
+  .user-pick-tick svg { width: 10px; height: 10px; color: var(--bg); }
+  .user-pick-empty { font-size: 12px; font-family: var(--mono); color: var(--text3); padding: 12px 0; text-align: center; }
+
+  /* ── Toast ───────────────────────────────────── */
   .toast-container {
     position: fixed; bottom: 20px; right: 20px; z-index: 200;
     display: flex; flex-direction: column; gap: 8px;
@@ -435,14 +509,35 @@
       </button>
     </div>
 
-    <div class="search-bar">
-      <input class="search-input" id="search-input" placeholder="Search conversations..." onkeyup="filterConvs()"/>
+    <!-- Tab bar: Chats | People -->
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" id="stab-chats" onclick="switchSidebarTab('chats')">Chats</button>
+      <button class="sidebar-tab" id="stab-people" onclick="switchSidebarTab('people')">People</button>
     </div>
 
-    <div class="section-label">Conversations</div>
-    <div class="conv-list" id="conv-list">
-      <div style="padding:40px 20px;text-align:center">
-        <p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Start one with the + button.</p>
+    <!-- Chats panel -->
+    <div class="sidebar-panel" id="panel-chats">
+      <div class="search-bar">
+        <input class="search-input" id="search-input" placeholder="Search conversations..." onkeyup="filterConvs()"/>
+      </div>
+      <div class="section-label">Conversations</div>
+      <div class="conv-list" id="conv-list">
+        <div style="padding:40px 20px;text-align:center">
+          <p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Go to <strong style="color:var(--text2)">People</strong> to find users.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- People panel -->
+    <div class="sidebar-panel" id="panel-people" style="display:none">
+      <div class="search-bar">
+        <input class="search-input" id="people-search" placeholder="Search users..." oninput="filterPeople()"/>
+      </div>
+      <div class="section-label">Registered Users</div>
+      <div class="people-list" id="people-list">
+        <div style="padding:40px 20px;text-align:center">
+          <span class="spinner"></span>
+        </div>
       </div>
     </div>
 
@@ -469,7 +564,7 @@
         </svg>
       </div>
       <h3>No conversation selected</h3>
-      <p>Select a conversation or start a new encrypted chat with the + button.</p>
+      <p>Browse <strong style="color:var(--text2)">People</strong> in the sidebar to start an encrypted chat.</p>
     </div>
   </div>
 </div>
@@ -478,24 +573,39 @@
 <div class="modal-overlay" id="new-msg-modal">
   <div class="modal-box">
     <div class="modal-title">New Encrypted Message</div>
-    <div class="key-info-row">
+    <div class="key-info-row" style="flex-shrink:0">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
       <div class="key-info-text">Message will be <strong>end-to-end encrypted</strong> using the recipient's public key</div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Recipient username</label>
-      <input class="form-input" id="new-msg-recipient" type="text" placeholder="username"/>
+
+    <!-- Scrollable body -->
+    <div class="modal-scroll">
+      <!-- User picker -->
+      <div style="margin-bottom:12px">
+        <div class="user-pick-label">Select recipient</div>
+        <div class="user-pick-list" id="modal-user-list">
+          <div class="user-pick-empty"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Or type username directly</label>
+        <input class="form-input" id="new-msg-recipient" type="text"
+               placeholder="username" oninput="onRecipientInput()"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-input" id="new-msg-body" rows="4"
+                  placeholder="Your encrypted message…" style="resize:vertical"></textarea>
+      </div>
+      <div class="auth-msg" id="new-msg-error"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Message</label>
-      <textarea class="form-input" id="new-msg-body" rows="4" placeholder="Your encrypted message..." style="resize:vertical"></textarea>
-    </div>
-    <div class="auth-msg" id="new-msg-error"></div>
+
     <div class="modal-actions">
       <button class="btn btn-ghost" style="flex:1" onclick="closeNewMsg()">Cancel</button>
-      <button class="btn" style="flex:2" onclick="sendNewMsg()">Encrypt & Send</button>
+      <button class="btn" style="flex:2" onclick="sendNewMsg()">Encrypt &amp; Send</button>
     </div>
   </div>
 </div>
@@ -503,16 +613,6 @@
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  WHISPERBOX — E2EE Messaging Client
-//  FIX LOG:
-//  1. Added /auth/login POST endpoint (was missing in backend)
-//  2. Fixed error parsing: extract string from response properly
-//  3. Fixed message fetch: GET /messages/{username} instead of /messages
-//  4. Fixed message send: include sender field in payload
-//  5. Fixed login flow: no longer expects server token (uses username as identity)
-// ═══════════════════════════════════════════════════
-
 const API = 'https://whisperbox.koyeb.app';
 
 let state = {
@@ -522,6 +622,8 @@ let state = {
   activeConv: null,
   publicKeys: {},
   pollingTimer: null,
+  allUsers: [],          // cached user list
+  usersLoaded: false,
 };
 
 // ── UTILS ─────────────────────────────────────────
@@ -542,14 +644,8 @@ function showToast(msg, type = 'success') {
 function setLoading(btnId, loading) {
   const btn = document.getElementById(btnId);
   if (!btn) return;
-  if (loading) {
-    btn._orig = btn.innerHTML;
-    btn.innerHTML = '<span class="spinner"></span>';
-    btn.disabled = true;
-  } else {
-    btn.innerHTML = btn._orig || '';
-    btn.disabled = false;
-  }
+  if (loading) { btn._orig = btn.innerHTML; btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true; }
+  else { btn.innerHTML = btn._orig || ''; btn.disabled = false; }
 }
 
 function showMsg(id, msg, type = 'error') {
@@ -565,74 +661,50 @@ function hideMsg(id) {
   if (el) { el.style.display = 'none'; el.textContent = ''; }
 }
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 // ── CRYPTO ─────────────────────────────────────────
 
 async function generateKeyPair() {
   return crypto.subtle.generateKey(
-    { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
-    true, ['encrypt', 'decrypt']
+    { name:'RSA-OAEP', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
+    true, ['encrypt','decrypt']
   );
 }
-
-async function exportPublicKey(key) {
-  return arrayBufToB64(await crypto.subtle.exportKey('spki', key));
-}
-
+async function exportPublicKey(key) { return arrayBufToB64(await crypto.subtle.exportKey('spki', key)); }
 async function importPublicKey(b64str) {
-  return crypto.subtle.importKey(
-    'spki', b64ToArrayBuf(b64str),
-    { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']
-  );
+  return crypto.subtle.importKey('spki', b64ToArrayBuf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['encrypt']);
 }
-
-async function exportPrivateKey(key) {
-  return arrayBufToB64(await crypto.subtle.exportKey('pkcs8', key));
-}
-
+async function exportPrivateKey(key) { return arrayBufToB64(await crypto.subtle.exportKey('pkcs8', key)); }
 async function importPrivateKey(b64str) {
-  return crypto.subtle.importKey(
-    'pkcs8', b64ToArrayBuf(b64str),
-    { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']
-  );
+  return crypto.subtle.importKey('pkcs8', b64ToArrayBuf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['decrypt']);
 }
 
 async function encryptMessage(plaintext, recipientPublicKey) {
-  const aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+  const aesKey = await crypto.subtle.generateKey({ name:'AES-GCM', length:256 }, true, ['encrypt','decrypt']);
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const enc = new TextEncoder();
-  const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, enc.encode(plaintext));
+  const ciphertext = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, aesKey, enc.encode(plaintext));
   const rawAES = await crypto.subtle.exportKey('raw', aesKey);
-  const encryptedKey = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, recipientPublicKey, rawAES);
-  return {
-    ciphertext: arrayBufToB64(ciphertext),
-    iv: arrayBufToB64(iv),
-    encryptedKey: arrayBufToB64(encryptedKey),
-  };
+  const encryptedKey = await crypto.subtle.encrypt({ name:'RSA-OAEP' }, recipientPublicKey, rawAES);
+  return { ciphertext: arrayBufToB64(ciphertext), iv: arrayBufToB64(iv), encryptedKey: arrayBufToB64(encryptedKey) };
 }
 
 async function decryptMessage(ciphertext, iv, encryptedKey, privateKey) {
-  const rawAES = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, b64ToArrayBuf(encryptedKey));
-  const aesKey = await crypto.subtle.importKey('raw', rawAES, { name: 'AES-GCM' }, false, ['decrypt']);
-  const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(iv) }, aesKey, b64ToArrayBuf(ciphertext));
+  const rawAES = await crypto.subtle.decrypt({ name:'RSA-OAEP' }, privateKey, b64ToArrayBuf(encryptedKey));
+  const aesKey = await crypto.subtle.importKey('raw', rawAES, { name:'AES-GCM' }, false, ['decrypt']);
+  const plainBuf = await crypto.subtle.decrypt({ name:'AES-GCM', iv:unb64(iv) }, aesKey, b64ToArrayBuf(ciphertext));
   return new TextDecoder().decode(plainBuf);
 }
 
-// ── PASSWORD-BASED PRIVATE KEY WRAPPING ───────────
-// Derives an AES-GCM key from the user's password via PBKDF2,
-// then uses it to encrypt the raw private key bytes.
-// This produces the `wrapped_private_key` + `pbkdf2_salt` the server expects.
-// The private key can be recovered on any device given the password.
-
 async function deriveWrappingKey(password, salt) {
   const enc = new TextEncoder();
-  const baseKey = await crypto.subtle.importKey(
-    'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
-  );
+  const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
-    baseKey,
-    { name: 'AES-GCM', length: 256 },
-    false, ['encrypt', 'decrypt']
+    { name:'PBKDF2', salt, iterations:200000, hash:'SHA-256' },
+    baseKey, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
   );
 }
 
@@ -641,31 +713,21 @@ async function wrapPrivateKey(privateKey, password) {
   const wrappingKey = await deriveWrappingKey(password, salt);
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const pkcs8 = await crypto.subtle.exportKey('pkcs8', privateKey);
-  const wrapped = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, wrappingKey, pkcs8);
-  // Pack: salt(16) + iv(12) + ciphertext → base64
+  const wrapped = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, wrappingKey, pkcs8);
   const blob = new Uint8Array(16 + 12 + wrapped.byteLength);
-  blob.set(salt, 0);
-  blob.set(iv, 16);
-  blob.set(new Uint8Array(wrapped), 28);
-  return {
-    wrapped_private_key: arrayBufToB64(blob.buffer),
-    pbkdf2_salt: arrayBufToB64(salt.buffer),
-  };
+  blob.set(salt, 0); blob.set(iv, 16); blob.set(new Uint8Array(wrapped), 28);
+  return { wrapped_private_key: arrayBufToB64(blob.buffer), pbkdf2_salt: arrayBufToB64(salt.buffer) };
 }
 
 async function unwrapPrivateKey(wrappedB64, password) {
   const blob = unb64(wrappedB64);
-  const salt = blob.slice(0, 16);
-  const iv = blob.slice(16, 28);
-  const ciphertext = blob.slice(28);
+  const salt = blob.slice(0, 16), iv = blob.slice(16, 28), ciphertext = blob.slice(28);
   const wrappingKey = await deriveWrappingKey(password, salt);
-  const pkcs8 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, wrappingKey, ciphertext);
-  return crypto.subtle.importKey(
-    'pkcs8', pkcs8, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']
-  );
+  const pkcs8 = await crypto.subtle.decrypt({ name:'AES-GCM', iv }, wrappingKey, ciphertext);
+  return crypto.subtle.importKey('pkcs8', pkcs8, { name:'RSA-OAEP', hash:'SHA-256' }, false, ['decrypt']);
 }
 
-// ── INDEXEDDB KEY STORAGE ──────────────────────────
+// ── INDEXEDDB ──────────────────────────────────────
 
 function openDB() {
   return new Promise((res, rej) => {
@@ -682,8 +744,7 @@ async function storePrivateKey(username, privateKey) {
   return new Promise((res, rej) => {
     const tx = db.transaction('keys', 'readwrite');
     tx.objectStore('keys').put(raw, `privkey_${username}`);
-    tx.oncomplete = res;
-    tx.onerror = () => rej(tx.error);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
   });
 }
 
@@ -693,35 +754,28 @@ async function loadPrivateKey(username) {
     const tx = db.transaction('keys', 'readonly');
     const req = tx.objectStore('keys').get(`privkey_${username}`);
     req.onsuccess = async () => {
-      if (req.result) {
-        try { res(await importPrivateKey(req.result)); } catch { res(null); }
-      } else { res(null); }
+      if (req.result) { try { res(await importPrivateKey(req.result)); } catch { res(null); } }
+      else res(null);
     };
     req.onerror = () => rej(req.error);
   });
 }
 
 // ── API HELPERS ────────────────────────────────────
-// FIX: Extract a clean error string instead of letting it become [object Object]
 
 async function extractError(res) {
   try {
     const data = await res.json();
-    // FastAPI returns { detail: "..." } for HTTPException
     if (typeof data.detail === 'string') return data.detail;
     if (typeof data.message === 'string') return data.message;
     if (typeof data.detail === 'object') return JSON.stringify(data.detail);
     return `Error ${res.status}`;
-  } catch {
-    return `HTTP ${res.status}`;
-  }
+  } catch { return `HTTP ${res.status}`; }
 }
 
 async function apiPost(path, body) {
   const res = await fetch(`${API}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(await extractError(res));
   return res.json();
@@ -753,33 +807,15 @@ async function doRegister() {
 
   setLoading('reg-btn', true);
   showMsg('reg-msg', 'Generating your encryption keys…', 'info');
-
   try {
     const keyPair = await generateKeyPair();
     const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
-
-    // Wrap private key with password so the server can store an encrypted backup
     showMsg('reg-msg', 'Wrapping private key…', 'info');
     const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
-
-    await apiPost('/auth/register', {
-      username,
-      password,
-      public_key: pubKeyB64,
-      display_name: username,
-      wrapped_private_key,
-      pbkdf2_salt,
-    });
-
-    // Also store private key locally in IndexedDB
+    await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt });
     await storePrivateKey(username, keyPair.privateKey);
-
     showMsg('reg-msg', 'Account created! You can now sign in.', 'success');
-    setTimeout(() => {
-      document.getElementById('login-user').value = username;
-      switchTab('login');
-      hideMsg('reg-msg');
-    }, 1200);
+    setTimeout(() => { document.getElementById('login-user').value = username; switchTab('login'); hideMsg('reg-msg'); }, 1200);
   } catch (e) {
     showMsg('reg-msg', e.message);
   } finally {
@@ -796,39 +832,26 @@ async function doLogin() {
 
   setLoading('login-btn', true);
   showMsg('login-msg', 'Authenticating…', 'info');
-
   try {
-    // POST to /auth/login
     const loginData = await apiPost('/auth/login', { username, password });
-
     state.username = username;
 
-    // Load private key from IndexedDB first
     showMsg('login-msg', 'Loading your private key…', 'info');
     let privateKey = await loadPrivateKey(username);
 
     if (!privateKey) {
-      // Try to recover from server's wrapped_private_key (works on new devices)
       const wrappedB64 = loginData.wrapped_private_key;
       if (wrappedB64) {
         showMsg('login-msg', 'Recovering key from server backup…', 'info');
-        try {
-          privateKey = await unwrapPrivateKey(wrappedB64, password);
-          await storePrivateKey(username, privateKey);
-        } catch {
-          showMsg('login-msg', 'Key recovery failed — password may have changed. Regenerating…', 'info');
-        }
+        try { privateKey = await unwrapPrivateKey(wrappedB64, password); await storePrivateKey(username, privateKey); }
+        catch { showMsg('login-msg', 'Key recovery failed — regenerating…', 'info'); }
       }
-
-      // Last resort: generate a fresh keypair and update the server
       if (!privateKey) {
-        showMsg('login-msg', 'No local key found. Regenerating…', 'info');
+        showMsg('login-msg', 'Generating fresh keys…', 'info');
         const keyPair = await generateKeyPair();
         const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
         const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
-        try {
-          await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt });
-        } catch { /* already registered — server may not have update-key endpoint */ }
+        try { await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt }); } catch {}
         await storePrivateKey(username, keyPair.privateKey);
         privateKey = keyPair.privateKey;
       }
@@ -846,13 +869,13 @@ async function doLogin() {
 
 function doLogout() {
   if (state.pollingTimer) clearInterval(state.pollingTimer);
-  state = { username: null, keyPair: null, conversations: {}, activeConv: null, publicKeys: {}, pollingTimer: null };
+  state = { username:null, keyPair:null, conversations:{}, activeConv:null, publicKeys:{}, pollingTimer:null, allUsers:[], usersLoaded:false };
   document.getElementById('app-screen').classList.remove('active');
   document.getElementById('app-screen').style.display = 'none';
   document.getElementById('auth-screen').classList.add('active');
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('login-pass').value = '';
-  showToast('Signed out. Keys remain on device.', 'success');
+  showToast('Signed out.', 'success');
 }
 
 // ── APP INIT ──────────────────────────────────────
@@ -862,7 +885,6 @@ function enterApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').classList.add('active');
   document.getElementById('app-screen').style.display = 'flex';
-
   document.getElementById('my-username-display').textContent = state.username;
   document.getElementById('my-avatar').textContent = state.username[0].toUpperCase();
 
@@ -870,17 +892,89 @@ function enterApp() {
   state.pollingTimer = setInterval(loadConversations, 5000);
 }
 
+// ── SIDEBAR TABS ──────────────────────────────────
+
+function switchSidebarTab(tab) {
+  const isChats = tab === 'chats';
+  document.getElementById('stab-chats').classList.toggle('active', isChats);
+  document.getElementById('stab-people').classList.toggle('active', !isChats);
+  document.getElementById('panel-chats').style.display = isChats ? 'flex' : 'none';
+  document.getElementById('panel-people').style.display = isChats ? 'none' : 'flex';
+  if (!isChats) loadPeople();
+}
+
+// ── PEOPLE PANEL ──────────────────────────────────
+
+async function loadPeople(forceRefresh = false) {
+  if (state.usersLoaded && !forceRefresh) { renderPeopleList(); return; }
+
+  const list = document.getElementById('people-list');
+  list.innerHTML = '<div style="padding:40px 20px;text-align:center"><span class="spinner"></span></div>';
+
+  try {
+    const users = await apiGet('/users');
+    // Exclude self
+    state.allUsers = (Array.isArray(users) ? users : []).filter(u => u.username !== state.username);
+    state.usersLoaded = true;
+    renderPeopleList();
+  } catch (e) {
+    list.innerHTML = `<div style="padding:30px 20px;text-align:center"><p style="font-size:12px;color:var(--danger);font-family:var(--mono)">${escHtml(e.message)}</p><button onclick="loadPeople(true)" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px">Retry</button></div>`;
+  }
+}
+
+function renderPeopleList() {
+  const list = document.getElementById('people-list');
+  const q = (document.getElementById('people-search')?.value || '').toLowerCase();
+  const filtered = state.allUsers.filter(u =>
+    u.username.toLowerCase().includes(q) || (u.display_name || '').toLowerCase().includes(q)
+  );
+
+  if (state.allUsers.length === 0) {
+    list.innerHTML = '<div style="padding:40px 20px;text-align:center"><p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No other users registered yet.</p></div>';
+    return;
+  }
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="padding:24px 20px;text-align:center"><p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No users match your search.</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(u => {
+    const hasConv = !!state.conversations[u.username];
+    return `<div class="people-item" onclick="startChatWith('${escHtml(u.username)}')">
+      <div class="conv-avatar">${u.username[0].toUpperCase()}</div>
+      <div class="conv-meta">
+        <div class="conv-name">${escHtml(u.display_name || u.username)}</div>
+        <div class="conv-preview" style="color:var(--text3)">@${escHtml(u.username)}${hasConv ? ' · <span style="color:var(--accent)">existing chat</span>' : ''}</div>
+      </div>
+      <button class="people-msg-btn" title="Message ${escHtml(u.username)}"
+        onclick="event.stopPropagation();startChatWith('${escHtml(u.username)}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function filterPeople() { renderPeopleList(); }
+
+function startChatWith(username) {
+  // Ensure the conversation slot exists then switch to Chats tab and open it
+  if (!state.conversations[username]) state.conversations[username] = [];
+  switchSidebarTab('chats');
+  renderConvList();
+  openConversation(username);
+}
+
 // ── CONVERSATIONS ──────────────────────────────────
 
 async function loadConversations() {
   try {
-    // FIX: use /messages/{username} — the backend filters by username
     const msgs = await apiGet(`/messages/${encodeURIComponent(state.username)}`);
     const list = Array.isArray(msgs) ? msgs : [];
 
     const convs = {};
     for (const msg of list) {
-      // Determine conversation partner
       const partner = msg.sender === state.username ? msg.recipient : msg.sender;
       if (!partner) continue;
       if (!convs[partner]) convs[partner] = [];
@@ -891,7 +985,13 @@ async function loadConversations() {
       const existing = state.conversations[partner] || [];
       const existingIds = new Set(existing.map(m => m.id));
       const fresh = newMsgs.filter(m => !existingIds.has(m.id));
-      state.conversations[partner] = [...existing, ...fresh].sort((a, b) => a.id - b.id);
+      if (fresh.length > 0) {
+        state.conversations[partner] = [...existing, ...fresh].sort((a, b) => a.id - b.id);
+        // Notify if not in active conversation
+        if (state.activeConv !== partner && fresh.some(m => m.sender !== state.username)) {
+          showToast(`New message from ${partner}`, 'success');
+        }
+      }
     }
 
     renderConvList();
@@ -902,23 +1002,30 @@ async function loadConversations() {
 function renderConvList() {
   const list = document.getElementById('conv-list');
   const search = document.getElementById('search-input').value.toLowerCase();
-  const partners = Object.keys(state.conversations).filter(p => p.toLowerCase().includes(search));
+  const partners = Object.keys(state.conversations)
+    .filter(p => p.toLowerCase().includes(search) && state.conversations[p].length > 0)
+    .sort((a, b) => {
+      const aLast = state.conversations[a].at(-1)?.timestamp ?? 0;
+      const bLast = state.conversations[b].at(-1)?.timestamp ?? 0;
+      return bLast - aLast; // newest first
+    });
 
   if (partners.length === 0) {
-    list.innerHTML = '<div style="padding:40px 20px;text-align:center"><p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Start one with the + button.</p></div>';
+    list.innerHTML = '<div style="padding:40px 20px;text-align:center"><p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Go to <strong style="color:var(--text2)">People</strong> to find users.</p></div>';
     return;
   }
 
   list.innerHTML = partners.map(partner => {
     const msgs = state.conversations[partner];
-    const last = msgs[msgs.length - 1];
+    const last = msgs.at(-1);
     const isActive = state.activeConv === partner;
     const time = last ? formatTime(last.timestamp) : '';
+    const preview = last?._decrypted ? last._decrypted.slice(0, 40) : '🔒 Encrypted';
     return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="openConversation('${escHtml(partner)}')">
       <div class="conv-avatar">${partner[0].toUpperCase()}</div>
       <div class="conv-meta">
         <div class="conv-name">${escHtml(partner)}</div>
-        <div class="conv-preview">🔒 Encrypted message</div>
+        <div class="conv-preview">${escHtml(preview)}</div>
       </div>
       <div class="conv-time">${time}</div>
     </div>`;
@@ -933,12 +1040,8 @@ function formatTime(ts) {
   const diff = Date.now() - d;
   if (diff < 60000) return 'now';
   if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
-  if (diff < 86400000) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  if (diff < 86400000) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  return d.toLocaleDateString([], { month:'short', day:'numeric' });
 }
 
 // ── OPEN CONVERSATION ─────────────────────────────
@@ -971,8 +1074,7 @@ async function openConversation(partner) {
       <div class="composer-inner">
         <textarea class="composer-input" id="composer-input" rows="1"
           placeholder="Message ${escHtml(partner)}…"
-          onkeydown="handleComposerKey(event)"
-          oninput="autoResize(this)"></textarea>
+          onkeydown="handleComposerKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="send-btn" onclick="sendMessage()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -1009,9 +1111,7 @@ async function renderMessages(partner) {
         const iv = msg.iv;
         if (ek && ct && iv) {
           text = await decryptMessage(ct, iv, ek, state.keyPair.privateKey);
-        } else {
-          text = '[Unknown message format]';
-        }
+        } else { text = '[Unknown message format]'; }
         msg._decrypted = text;
       } catch {
         text = '[Decryption failed — key mismatch]';
@@ -1036,7 +1136,7 @@ async function renderMessages(partner) {
   area.scrollTop = area.scrollHeight;
 }
 
-// ── SEND ─────────────────────────────────────────
+// ── SEND ──────────────────────────────────────────
 
 async function getRecipientPublicKey(username) {
   if (state.publicKeys[username]) return state.publicKeys[username];
@@ -1055,52 +1155,116 @@ async function sendMessage() {
 
   const partner = state.activeConv;
   const btn = document.getElementById('send-btn');
-  btn.disabled = true;
-  input.disabled = true;
+  btn.disabled = true; input.disabled = true;
 
   try {
     const recipientKey = await getRecipientPublicKey(partner);
     const { ciphertext, iv, encryptedKey } = await encryptMessage(plaintext, recipientKey);
 
-    // FIX: include sender in payload so backend stores it correctly
     const result = await apiPost('/messages', {
-      sender: state.username,
-      recipient: partner,
-      ciphertext,
-      iv,
-      encrypted_key: encryptedKey,
+      sender: state.username, recipient: partner,
+      ciphertext, iv, encrypted_key: encryptedKey,
     });
 
     const localMsg = {
-      id: result.id || Date.now(),
-      sender: state.username,
-      recipient: partner,
+      id: result.id || Date.now(), sender: state.username, recipient: partner,
       ciphertext, iv, encrypted_key: encryptedKey,
-      timestamp: Date.now() / 1000,
-      _decrypted: plaintext,
+      timestamp: Date.now() / 1000, _decrypted: plaintext,
     };
     if (!state.conversations[partner]) state.conversations[partner] = [];
     state.conversations[partner].push(localMsg);
 
-    input.value = '';
-    input.style.height = 'auto';
-    renderMessages(partner);
-    renderConvList();
+    input.value = ''; input.style.height = 'auto';
+    renderMessages(partner); renderConvList();
   } catch (e) {
     showToast(`Send failed: ${e.message}`, 'error');
   } finally {
-    btn.disabled = false;
-    input.disabled = false;
-    input.focus();
+    btn.disabled = false; input.disabled = false; input.focus();
   }
 }
 
+// ── NEW MESSAGE MODAL ─────────────────────────────
+
+let selectedRecipient = null;
+
+async function openNewMsg() {
+  selectedRecipient = null;
+  document.getElementById('new-msg-recipient').value = '';
+  document.getElementById('new-msg-body').value = '';
+  hideMsg('new-msg-error');
+  document.getElementById('new-msg-modal').classList.add('open');
+  setTimeout(() => document.getElementById('new-msg-body').focus(), 100);
+  await loadModalUsers();
+}
+
+async function loadModalUsers() {
+  const listEl = document.getElementById('modal-user-list');
+  if (!state.usersLoaded) {
+    listEl.innerHTML = '<div class="user-pick-empty"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></div>';
+    try {
+      const users = await apiGet('/users');
+      state.allUsers = (Array.isArray(users) ? users : []).filter(u => u.username !== state.username);
+      state.usersLoaded = true;
+    } catch (e) {
+      listEl.innerHTML = `<div class="user-pick-empty" style="color:var(--danger)">${escHtml(e.message)}</div>`;
+      return;
+    }
+  }
+  renderModalUsers('');
+}
+
+function renderModalUsers(q) {
+  const listEl = document.getElementById('modal-user-list');
+  const filtered = state.allUsers.filter(u =>
+    !q || u.username.toLowerCase().includes(q) || (u.display_name || '').toLowerCase().includes(q)
+  );
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="user-pick-empty">${state.allUsers.length === 0 ? 'No other users registered yet.' : 'No users match your search.'}</div>`;
+    return;
+  }
+  listEl.innerHTML = filtered.slice(0, 8).map(u => `
+    <div class="user-pick-item ${selectedRecipient === u.username ? 'selected' : ''}"
+         id="upick-${escHtml(u.username)}"
+         onclick="selectRecipient('${escHtml(u.username)}')">
+      <div class="user-pick-avatar">${u.username[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-pick-name">${escHtml(u.display_name || u.username)}</div>
+        <div class="user-pick-handle">@${escHtml(u.username)}</div>
+      </div>
+      <div class="user-pick-tick">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    </div>`).join('');
+}
+
+function selectRecipient(username) {
+  selectedRecipient = username;
+  document.getElementById('new-msg-recipient').value = username;
+  renderModalUsers(document.getElementById('new-msg-recipient').value.toLowerCase());
+}
+
+function onRecipientInput() {
+  const val = document.getElementById('new-msg-recipient').value.trim();
+  // Only clear selectedRecipient if the user typed something different
+  if (val !== selectedRecipient) selectedRecipient = null;
+  renderModalUsers(val.toLowerCase());
+}
+
+function closeNewMsg() {
+  document.getElementById('new-msg-modal').classList.remove('open');
+  selectedRecipient = null;
+}
+
 async function sendNewMsg() {
-  const recipient = document.getElementById('new-msg-recipient').value.trim();
+  const recipientInput = document.getElementById('new-msg-recipient').value.trim();
+  const recipient = selectedRecipient || recipientInput;
   const body = document.getElementById('new-msg-body').value.trim();
   hideMsg('new-msg-error');
 
-  if (!recipient || !body) return showMsg('new-msg-error', 'Please fill in recipient and message');
+  if (!recipient) return showMsg('new-msg-error', 'Please select or type a recipient');
+  if (!body) return showMsg('new-msg-error', 'Please enter a message');
   if (recipient === state.username) return showMsg('new-msg-error', "You can't message yourself");
 
   showMsg('new-msg-error', 'Encrypting…', 'info');
@@ -1108,28 +1272,22 @@ async function sendNewMsg() {
   try {
     const recipientKey = await getRecipientPublicKey(recipient);
     const { ciphertext, iv, encryptedKey } = await encryptMessage(body, recipientKey);
-
     const result = await apiPost('/messages', {
-      sender: state.username,
-      recipient,
-      ciphertext,
-      iv,
-      encrypted_key: encryptedKey,
+      sender: state.username, recipient,
+      ciphertext, iv, encrypted_key: encryptedKey,
     });
 
     const localMsg = {
-      id: result.id || Date.now(),
-      sender: state.username,
-      recipient,
+      id: result.id || Date.now(), sender: state.username, recipient,
       ciphertext, iv, encrypted_key: encryptedKey,
-      timestamp: Date.now() / 1000,
-      _decrypted: body,
+      timestamp: Date.now() / 1000, _decrypted: body,
     };
     if (!state.conversations[recipient]) state.conversations[recipient] = [];
     state.conversations[recipient].push(localMsg);
 
     closeNewMsg();
     showToast('Message encrypted and sent', 'success');
+    switchSidebarTab('chats');
     openConversation(recipient);
     renderConvList();
   } catch (e) {
@@ -1148,22 +1306,12 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
-function openNewMsg() {
-  document.getElementById('new-msg-modal').classList.add('open');
-  document.getElementById('new-msg-recipient').value = '';
-  document.getElementById('new-msg-body').value = '';
-  hideMsg('new-msg-error');
-  setTimeout(() => document.getElementById('new-msg-recipient').focus(), 100);
-}
-
-function closeNewMsg() {
-  document.getElementById('new-msg-modal').classList.remove('open');
-}
-
-document.getElementById('new-msg-modal').addEventListener('click', function (e) {
+// Close modal on backdrop click
+document.getElementById('new-msg-modal').addEventListener('click', function(e) {
   if (e.target === this) closeNewMsg();
 });
 
+// Enter to submit on auth forms
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const loginForm = document.getElementById('login-form');
