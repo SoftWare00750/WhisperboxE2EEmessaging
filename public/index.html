@@ -617,6 +617,54 @@ async function decryptMessage(ciphertext, iv, encryptedKey, privateKey) {
   return new TextDecoder().decode(plainBuf);
 }
 
+// ── PASSWORD-BASED PRIVATE KEY WRAPPING ───────────
+// Derives an AES-GCM key from the user's password via PBKDF2,
+// then uses it to encrypt the raw private key bytes.
+// This produces the `wrapped_private_key` + `pbkdf2_salt` the server expects.
+// The private key can be recovered on any device given the password.
+
+async function deriveWrappingKey(password, salt) {
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey(
+    'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    false, ['encrypt', 'decrypt']
+  );
+}
+
+async function wrapPrivateKey(privateKey, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const wrappingKey = await deriveWrappingKey(password, salt);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const pkcs8 = await crypto.subtle.exportKey('pkcs8', privateKey);
+  const wrapped = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, wrappingKey, pkcs8);
+  // Pack: salt(16) + iv(12) + ciphertext → base64
+  const blob = new Uint8Array(16 + 12 + wrapped.byteLength);
+  blob.set(salt, 0);
+  blob.set(iv, 16);
+  blob.set(new Uint8Array(wrapped), 28);
+  return {
+    wrapped_private_key: arrayBufToB64(blob.buffer),
+    pbkdf2_salt: arrayBufToB64(salt.buffer),
+  };
+}
+
+async function unwrapPrivateKey(wrappedB64, password) {
+  const blob = unb64(wrappedB64);
+  const salt = blob.slice(0, 16);
+  const iv = blob.slice(16, 28);
+  const ciphertext = blob.slice(28);
+  const wrappingKey = await deriveWrappingKey(password, salt);
+  const pkcs8 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, wrappingKey, ciphertext);
+  return crypto.subtle.importKey(
+    'pkcs8', pkcs8, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']
+  );
+}
+
 // ── INDEXEDDB KEY STORAGE ──────────────────────────
 
 function openDB() {
@@ -710,9 +758,20 @@ async function doRegister() {
     const keyPair = await generateKeyPair();
     const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
 
-    await apiPost('/auth/register', { username, password, public_key: pubKeyB64 });
+    // Wrap private key with password so the server can store an encrypted backup
+    showMsg('reg-msg', 'Wrapping private key…', 'info');
+    const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
 
-    // Store private key locally
+    await apiPost('/auth/register', {
+      username,
+      password,
+      public_key: pubKeyB64,
+      display_name: username,
+      wrapped_private_key,
+      pbkdf2_salt,
+    });
+
+    // Also store private key locally in IndexedDB
     await storePrivateKey(username, keyPair.privateKey);
 
     showMsg('reg-msg', 'Account created! You can now sign in.', 'success');
@@ -739,24 +798,40 @@ async function doLogin() {
   showMsg('login-msg', 'Authenticating…', 'info');
 
   try {
-    // FIX: POST to /auth/login (was missing from backend — now added)
-    await apiPost('/auth/login', { username, password });
+    // POST to /auth/login
+    const loginData = await apiPost('/auth/login', { username, password });
 
     state.username = username;
 
-    // Load private key from IndexedDB
+    // Load private key from IndexedDB first
     showMsg('login-msg', 'Loading your private key…', 'info');
     let privateKey = await loadPrivateKey(username);
 
     if (!privateKey) {
-      // No local key — generate a new one and update the server's public key
-      showMsg('login-msg', 'No local key found. Regenerating keys…', 'info');
-      const keyPair = await generateKeyPair();
-      const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
-      // Re-register public key (best-effort — server may not have an update endpoint)
-      try { await apiPost('/auth/register', { username, password, public_key: pubKeyB64 }); } catch { /* already registered */ }
-      await storePrivateKey(username, keyPair.privateKey);
-      privateKey = keyPair.privateKey;
+      // Try to recover from server's wrapped_private_key (works on new devices)
+      const wrappedB64 = loginData.wrapped_private_key;
+      if (wrappedB64) {
+        showMsg('login-msg', 'Recovering key from server backup…', 'info');
+        try {
+          privateKey = await unwrapPrivateKey(wrappedB64, password);
+          await storePrivateKey(username, privateKey);
+        } catch {
+          showMsg('login-msg', 'Key recovery failed — password may have changed. Regenerating…', 'info');
+        }
+      }
+
+      // Last resort: generate a fresh keypair and update the server
+      if (!privateKey) {
+        showMsg('login-msg', 'No local key found. Regenerating…', 'info');
+        const keyPair = await generateKeyPair();
+        const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
+        const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
+        try {
+          await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt });
+        } catch { /* already registered — server may not have update-key endpoint */ }
+        await storePrivateKey(username, keyPair.privateKey);
+        privateKey = keyPair.privateKey;
+      }
     }
 
     state.keyPair = { privateKey };
