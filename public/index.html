@@ -533,7 +533,18 @@
       <div class="search-bar">
         <input class="search-input" id="people-search" placeholder="Search users..." oninput="filterPeople()"/>
       </div>
-      <div class="section-label">Registered Users</div>
+      <!-- Section label with refresh button -->
+      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
+        <span>Registered Users</span>
+        <button onclick="loadPeople(true)" title="Refresh user list"
+          style="background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center;padding:2px;transition:color 0.15s"
+          onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
       <div class="people-list" id="people-list">
         <div style="padding:40px 20px;text-align:center">
           <span class="spinner"></span>
@@ -622,7 +633,7 @@ let state = {
   activeConv: null,
   publicKeys: {},
   pollingTimer: null,
-  allUsers: [],          // cached user list
+  allUsers: [],
   usersLoaded: false,
 };
 
@@ -814,6 +825,8 @@ async function doRegister() {
     const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
     await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt });
     await storePrivateKey(username, keyPair.privateKey);
+    // Invalidate cached user list so the new user shows up in People
+    state.usersLoaded = false;
     showMsg('reg-msg', 'Account created! You can now sign in.', 'success');
     setTimeout(() => { document.getElementById('login-user').value = username; switchTab('login'); hideMsg('reg-msg'); }, 1200);
   } catch (e) {
@@ -912,13 +925,20 @@ async function loadPeople(forceRefresh = false) {
   list.innerHTML = '<div style="padding:40px 20px;text-align:center"><span class="spinner"></span></div>';
 
   try {
+    // GET /users — returns array of {username, display_name, public_key}
     const users = await apiGet('/users');
-    // Exclude self
     state.allUsers = (Array.isArray(users) ? users : []).filter(u => u.username !== state.username);
     state.usersLoaded = true;
     renderPeopleList();
   } catch (e) {
-    list.innerHTML = `<div style="padding:30px 20px;text-align:center"><p style="font-size:12px;color:var(--danger);font-family:var(--mono)">${escHtml(e.message)}</p><button onclick="loadPeople(true)" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px">Retry</button></div>`;
+    list.innerHTML = `
+      <div style="padding:30px 20px;text-align:center">
+        <p style="font-size:12px;color:var(--danger);font-family:var(--mono);margin-bottom:8px">${escHtml(e.message)}</p>
+        <button onclick="loadPeople(true)"
+          style="background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px">
+          Retry
+        </button>
+      </div>`;
   }
 }
 
@@ -930,9 +950,18 @@ function renderPeopleList() {
   );
 
   if (state.allUsers.length === 0) {
-    list.innerHTML = '<div style="padding:40px 20px;text-align:center"><p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No other users registered yet.</p></div>';
+    list.innerHTML = `
+      <div style="padding:32px 20px;text-align:center">
+        <p style="font-size:13px;color:var(--text3);font-family:var(--mono);margin-bottom:6px">No other users found.</p>
+        <p style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">The server may have restarted.<br/>Ask contacts to re-register, then click ↺ to refresh.</p>
+        <button onclick="loadPeople(true)"
+          style="margin-top:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600">
+          ↺ Refresh
+        </button>
+      </div>`;
     return;
   }
+
   if (filtered.length === 0) {
     list.innerHTML = '<div style="padding:24px 20px;text-align:center"><p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No users match your search.</p></div>';
     return;
@@ -959,7 +988,6 @@ function renderPeopleList() {
 function filterPeople() { renderPeopleList(); }
 
 function startChatWith(username) {
-  // Ensure the conversation slot exists then switch to Chats tab and open it
   if (!state.conversations[username]) state.conversations[username] = [];
   switchSidebarTab('chats');
   renderConvList();
@@ -987,7 +1015,6 @@ async function loadConversations() {
       const fresh = newMsgs.filter(m => !existingIds.has(m.id));
       if (fresh.length > 0) {
         state.conversations[partner] = [...existing, ...fresh].sort((a, b) => a.id - b.id);
-        // Notify if not in active conversation
         if (state.activeConv !== partner && fresh.some(m => m.sender !== state.username)) {
           showToast(`New message from ${partner}`, 'success');
         }
@@ -1007,7 +1034,7 @@ function renderConvList() {
     .sort((a, b) => {
       const aLast = state.conversations[a].at(-1)?.timestamp ?? 0;
       const bLast = state.conversations[b].at(-1)?.timestamp ?? 0;
-      return bLast - aLast; // newest first
+      return bLast - aLast;
     });
 
   if (partners.length === 0) {
@@ -1247,7 +1274,6 @@ function selectRecipient(username) {
 
 function onRecipientInput() {
   const val = document.getElementById('new-msg-recipient').value.trim();
-  // Only clear selectedRecipient if the user typed something different
   if (val !== selectedRecipient) selectedRecipient = null;
   renderModalUsers(val.toLowerCase());
 }
