@@ -139,7 +139,6 @@
   .sidebar-logo-name { font-size: 16px; font-weight: 700; }
   .sidebar-logo-name span { color: var(--accent); }
 
-  /* ── Sidebar tab bar ─────────────────────────── */
   .sidebar-tabs {
     display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
   }
@@ -178,9 +177,7 @@
     color: var(--text3); font-family: var(--mono);
   }
 
-  .conv-list, .people-list {
-    flex: 1; overflow-y: auto;
-  }
+  .conv-list, .people-list { flex: 1; overflow-y: auto; }
   .conv-list::-webkit-scrollbar,
   .people-list::-webkit-scrollbar { width: 4px; }
   .conv-list::-webkit-scrollbar-thumb,
@@ -198,7 +195,6 @@
     width: 3px; background: var(--accent);
   }
 
-  /* ── People panel ────────────────────────────── */
   .people-item {
     padding: 12px 16px; display: flex; align-items: center; gap: 12px;
     border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s;
@@ -213,7 +209,6 @@
   }
   .people-msg-btn:hover { background: var(--accent-dim2); }
   .people-msg-btn svg { width: 14px; height: 14px; }
-  .people-online { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
   .conv-avatar {
     width: 38px; height: 38px; border-radius: 50%; background: var(--bg4);
@@ -224,7 +219,7 @@
   .conv-meta { flex: 1; min-width: 0; }
   .conv-name { font-size: 14px; font-weight: 600; color: var(--text); }
   .conv-preview { font-size: 12px; color: var(--text2); font-family: var(--mono); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .conv-time { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+  .conv-time { font-size: 10px; color: var(--text3); font-family: var(--mono); flex-shrink: 0; }
 
   .sidebar-footer {
     padding: 12px 16px; border-top: 1px solid var(--border);
@@ -304,8 +299,7 @@
 
   .msg-meta { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
   .msg-wrap.me .msg-meta { justify-content: flex-end; }
-  .msg-enc-tick { color: var(--accent); font-size: 9px; }
-  .msg-error { color: var(--danger); font-style: italic; font-size: 13px; }
+  .msg-enc-tick { color: var(--accent); }
 
   .no-conv {
     flex: 1; display: flex; flex-direction: column;
@@ -373,7 +367,6 @@
   .modal-scroll::-webkit-scrollbar { width: 4px; }
   .modal-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-  /* User pick list inside modal */
   .user-pick-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
   .user-pick-label {
     font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
@@ -430,15 +423,6 @@
   }
   .sys-msg span { padding: 3px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; }
 
-  .key-info-row {
-    display: flex; align-items: center; gap: 8px; padding: 10px 12px;
-    background: var(--bg3); border-radius: var(--radius-sm); margin-bottom: 10px;
-    border: 1px solid var(--border);
-  }
-  .key-info-row svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
-  .key-info-text { font-size: 12px; font-family: var(--mono); color: var(--text2); }
-  .key-info-text strong { color: var(--text); }
-
   textarea { scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
 </style>
 </head>
@@ -481,6 +465,10 @@
         <input class="form-input" id="reg-user" type="text" placeholder="choose_username" autocomplete="username"/>
       </div>
       <div class="form-group">
+        <label class="form-label">Display Name (optional)</label>
+        <input class="form-input" id="reg-display" type="text" placeholder="Your Name"/>
+      </div>
+      <div class="form-group">
         <label class="form-label">Password</label>
         <input class="form-input" id="reg-pass" type="password" placeholder="••••••••" autocomplete="new-password"/>
       </div>
@@ -509,7 +497,6 @@
       </button>
     </div>
 
-    <!-- Tab bar: Chats | People -->
     <div class="sidebar-tabs">
       <button class="sidebar-tab active" id="stab-chats" onclick="switchSidebarTab('chats')">Chats</button>
       <button class="sidebar-tab" id="stab-people" onclick="switchSidebarTab('people')">People</button>
@@ -518,45 +505,26 @@
     <!-- Chats panel -->
     <div class="sidebar-panel" id="panel-chats">
       <div class="search-bar">
-        <input class="search-input" id="search-input" placeholder="Search conversations..." onkeyup="filterConvs()"/>
+        <input class="search-input" id="search-input" placeholder="Search conversations..." onkeyup="renderConvList()"/>
       </div>
       <div class="section-label">Conversations</div>
-      <div class="conv-list" id="conv-list">
-        <div style="padding:40px 20px;text-align:center">
-          <p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Go to <strong style="color:var(--text2)">People</strong> to find users.</p>
-        </div>
-      </div>
+      <div class="conv-list" id="conv-list"></div>
     </div>
 
     <!-- People panel -->
     <div class="sidebar-panel" id="panel-people" style="display:none">
       <div class="search-bar">
-        <input class="search-input" id="people-search" placeholder="Search users..." oninput="filterPeople()"/>
+        <input class="search-input" id="people-search" placeholder="Search users..." oninput="renderPeopleList()"/>
       </div>
-      <!-- Section label with refresh button -->
-      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:12px">
-        <span>Registered Users</span>
-        <button onclick="loadPeople(true)" title="Refresh user list"
-          style="background:none;border:none;cursor:pointer;color:var(--text3);display:flex;align-items:center;padding:2px;transition:color 0.15s"
-          onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-          </svg>
-        </button>
-      </div>
-      <div class="people-list" id="people-list">
-        <div style="padding:40px 20px;text-align:center">
-          <span class="spinner"></span>
-        </div>
-      </div>
+      <div class="section-label">Registered Users</div>
+      <div class="people-list" id="people-list"></div>
     </div>
 
     <div class="sidebar-footer">
       <div class="my-avatar" id="my-avatar">—</div>
       <div class="my-info">
         <div class="my-name" id="my-username-display">—</div>
-        <div class="my-key-status"><div class="key-dot"></div>Keys generated</div>
+        <div class="my-key-status"><div class="key-dot"></div>Encrypted locally</div>
       </div>
       <button class="icon-btn" title="Sign out" onclick="doLogout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -584,32 +552,25 @@
 <div class="modal-overlay" id="new-msg-modal">
   <div class="modal-box">
     <div class="modal-title">New Encrypted Message</div>
-    <div class="key-info-row" style="flex-shrink:0">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:16px;border:1px solid var(--border);flex-shrink:0">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
-      <div class="key-info-text">Message will be <strong>end-to-end encrypted</strong> using the recipient's public key</div>
+      <div style="font-size:12px;font-family:var(--mono);color:var(--text2)">Message will be <strong style="color:var(--text)">end-to-end encrypted</strong></div>
     </div>
 
-    <!-- Scrollable body -->
     <div class="modal-scroll">
-      <!-- User picker -->
       <div style="margin-bottom:12px">
         <div class="user-pick-label">Select recipient</div>
-        <div class="user-pick-list" id="modal-user-list">
-          <div class="user-pick-empty"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></div>
-        </div>
+        <div class="user-pick-list" id="modal-user-list"></div>
       </div>
-
       <div class="form-group">
         <label class="form-label">Or type username directly</label>
-        <input class="form-input" id="new-msg-recipient" type="text"
-               placeholder="username" oninput="onRecipientInput()"/>
+        <input class="form-input" id="new-msg-recipient" type="text" placeholder="username" oninput="onRecipientInput()"/>
       </div>
       <div class="form-group">
         <label class="form-label">Message</label>
-        <textarea class="form-input" id="new-msg-body" rows="4"
-                  placeholder="Your encrypted message…" style="resize:vertical"></textarea>
+        <textarea class="form-input" id="new-msg-body" rows="4" placeholder="Your encrypted message…" style="resize:vertical"></textarea>
       </div>
       <div class="auth-msg" id="new-msg-error"></div>
     </div>
@@ -624,25 +585,35 @@
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-const API = 'https://whisperbox.koyeb.app';
+// ═══════════════════════════════════════════════════════
+//  LOCAL STORAGE SCHEMA
+//  wb_users       → { [username]: { passwordHash, displayName, publicKey, createdAt } }
+//  wb_messages    → [ { id, sender, recipient, ciphertext, iv, encryptedKey, timestamp } ]
+//  wb_session     → { username } | null
+//  wb_privkey_[u] → base64 pkcs8 private key
+// ═══════════════════════════════════════════════════════
 
-let state = {
-  username: null,
-  keyPair: null,
-  conversations: {},
-  activeConv: null,
-  publicKeys: {},
-  pollingTimer: null,
-  allUsers: [],
-  usersLoaded: false,
-};
+// ── UTILS ────────────────────────────────────────────────
 
-// ── UTILS ─────────────────────────────────────────
+function b64(buf) {
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function unb64(s) {
+  const bin = atob(s);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+function unb64buf(s) { return unb64(s).buffer; }
 
-function b64(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
-function unb64(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
-function arrayBufToB64(buf) { return b64(buf); }
-function b64ToArrayBuf(s) { return unb64(s).buffer; }
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 function showToast(msg, type = 'success') {
   const t = document.createElement('div');
@@ -652,31 +623,63 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.remove(), 3500);
 }
 
-function setLoading(btnId, loading) {
-  const btn = document.getElementById(btnId);
-  if (!btn) return;
-  if (loading) { btn._orig = btn.innerHTML; btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true; }
-  else { btn.innerHTML = btn._orig || ''; btn.disabled = false; }
-}
-
 function showMsg(id, msg, type = 'error') {
   const el = document.getElementById(id);
   if (!el) return;
   el.className = `auth-msg ${type}`;
   el.textContent = msg;
-  el.style.display = 'block';
 }
 
 function hideMsg(id) {
   const el = document.getElementById(id);
-  if (el) { el.style.display = 'none'; el.textContent = ''; }
+  if (el) { el.className = 'auth-msg'; el.textContent = ''; }
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function setBtn(id, loading, label) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = loading;
+  if (!loading && label) btn.textContent = label;
+  if (loading) btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;vertical-align:middle"></span>';
 }
 
-// ── CRYPTO ─────────────────────────────────────────
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(typeof ts === 'number' && ts < 1e12 ? ts * 1000 : ts);
+  const diff = Date.now() - d;
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
+  if (diff < 86400000) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  return d.toLocaleDateString([], { month:'short', day:'numeric' });
+}
+
+// ── LOCAL STORAGE HELPERS ────────────────────────────────
+
+function lsGet(key, fallback = null) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+}
+function lsSet(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; }
+}
+function lsDel(key) { try { localStorage.removeItem(key); } catch {} }
+
+function getUsers() { return lsGet('wb_users', {}); }
+function saveUsers(u) { lsSet('wb_users', u); }
+function getMessages() { return lsGet('wb_messages', []); }
+function saveMessages(m) { lsSet('wb_messages', m); }
+function getSession() { return lsGet('wb_session', null); }
+function saveSession(s) { lsSet('wb_session', s); }
+function clearSession() { lsDel('wb_session'); }
+function getPrivKey(username) { return localStorage.getItem(`wb_privkey_${username}`); }
+function setPrivKey(username, b64key) { localStorage.setItem(`wb_privkey_${username}`, b64key); }
+
+// ── CRYPTO ───────────────────────────────────────────────
+
+async function hashPassword(password) {
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest('SHA-256', enc.encode(password));
+  return b64(buf);
+}
 
 async function generateKeyPair() {
   return crypto.subtle.generateKey(
@@ -684,13 +687,13 @@ async function generateKeyPair() {
     true, ['encrypt','decrypt']
   );
 }
-async function exportPublicKey(key) { return arrayBufToB64(await crypto.subtle.exportKey('spki', key)); }
+async function exportPublicKey(key) { return b64(await crypto.subtle.exportKey('spki', key)); }
+async function exportPrivateKey(key) { return b64(await crypto.subtle.exportKey('pkcs8', key)); }
 async function importPublicKey(b64str) {
-  return crypto.subtle.importKey('spki', b64ToArrayBuf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['encrypt']);
+  return crypto.subtle.importKey('spki', unb64buf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['encrypt']);
 }
-async function exportPrivateKey(key) { return arrayBufToB64(await crypto.subtle.exportKey('pkcs8', key)); }
 async function importPrivateKey(b64str) {
-  return crypto.subtle.importKey('pkcs8', b64ToArrayBuf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['decrypt']);
+  return crypto.subtle.importKey('pkcs8', unb64buf(b64str), { name:'RSA-OAEP', hash:'SHA-256' }, false, ['decrypt']);
 }
 
 async function encryptMessage(plaintext, recipientPublicKey) {
@@ -700,189 +703,134 @@ async function encryptMessage(plaintext, recipientPublicKey) {
   const ciphertext = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, aesKey, enc.encode(plaintext));
   const rawAES = await crypto.subtle.exportKey('raw', aesKey);
   const encryptedKey = await crypto.subtle.encrypt({ name:'RSA-OAEP' }, recipientPublicKey, rawAES);
-  return { ciphertext: arrayBufToB64(ciphertext), iv: arrayBufToB64(iv), encryptedKey: arrayBufToB64(encryptedKey) };
+  return {
+    ciphertext: b64(ciphertext),
+    iv: b64(iv.buffer),
+    encrypted_key: b64(encryptedKey)
+  };
 }
 
-async function decryptMessage(ciphertext, iv, encryptedKey, privateKey) {
-  const rawAES = await crypto.subtle.decrypt({ name:'RSA-OAEP' }, privateKey, b64ToArrayBuf(encryptedKey));
+async function decryptMessage(ciphertext, iv, encrypted_key, privateKey) {
+  const rawAES = await crypto.subtle.decrypt({ name:'RSA-OAEP' }, privateKey, unb64buf(encrypted_key));
   const aesKey = await crypto.subtle.importKey('raw', rawAES, { name:'AES-GCM' }, false, ['decrypt']);
-  const plainBuf = await crypto.subtle.decrypt({ name:'AES-GCM', iv:unb64(iv) }, aesKey, b64ToArrayBuf(ciphertext));
+  const plainBuf = await crypto.subtle.decrypt({ name:'AES-GCM', iv: unb64(iv) }, aesKey, unb64buf(ciphertext));
   return new TextDecoder().decode(plainBuf);
 }
 
-async function deriveWrappingKey(password, salt) {
-  const enc = new TextEncoder();
-  const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey(
-    { name:'PBKDF2', salt, iterations:200000, hash:'SHA-256' },
-    baseKey, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
-  );
-}
+// ── APP STATE ────────────────────────────────────────────
 
-async function wrapPrivateKey(privateKey, password) {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const wrappingKey = await deriveWrappingKey(password, salt);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const pkcs8 = await crypto.subtle.exportKey('pkcs8', privateKey);
-  const wrapped = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, wrappingKey, pkcs8);
-  const blob = new Uint8Array(16 + 12 + wrapped.byteLength);
-  blob.set(salt, 0); blob.set(iv, 16); blob.set(new Uint8Array(wrapped), 28);
-  return { wrapped_private_key: arrayBufToB64(blob.buffer), pbkdf2_salt: arrayBufToB64(salt.buffer) };
-}
+let state = {
+  username: null,
+  privateKey: null,
+  activeConv: null,
+  cachedPubKeys: {},
+  messageCache: {},   // { partner: [ {msg, _decrypted} ] }
+};
 
-async function unwrapPrivateKey(wrappedB64, password) {
-  const blob = unb64(wrappedB64);
-  const salt = blob.slice(0, 16), iv = blob.slice(16, 28), ciphertext = blob.slice(28);
-  const wrappingKey = await deriveWrappingKey(password, salt);
-  const pkcs8 = await crypto.subtle.decrypt({ name:'AES-GCM', iv }, wrappingKey, ciphertext);
-  return crypto.subtle.importKey('pkcs8', pkcs8, { name:'RSA-OAEP', hash:'SHA-256' }, false, ['decrypt']);
-}
-
-// ── INDEXEDDB ──────────────────────────────────────
-
-function openDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open('WhisperBoxKeys', 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore('keys');
-    req.onsuccess = e => res(e.target.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-async function storePrivateKey(username, privateKey) {
-  const db = await openDB();
-  const raw = await exportPrivateKey(privateKey);
-  return new Promise((res, rej) => {
-    const tx = db.transaction('keys', 'readwrite');
-    tx.objectStore('keys').put(raw, `privkey_${username}`);
-    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
-  });
-}
-
-async function loadPrivateKey(username) {
-  const db = await openDB();
-  return new Promise((res, rej) => {
-    const tx = db.transaction('keys', 'readonly');
-    const req = tx.objectStore('keys').get(`privkey_${username}`);
-    req.onsuccess = async () => {
-      if (req.result) { try { res(await importPrivateKey(req.result)); } catch { res(null); } }
-      else res(null);
-    };
-    req.onerror = () => rej(req.error);
-  });
-}
-
-// ── API HELPERS ────────────────────────────────────
-
-async function extractError(res) {
-  try {
-    const data = await res.json();
-    if (typeof data.detail === 'string') return data.detail;
-    if (typeof data.message === 'string') return data.message;
-    if (typeof data.detail === 'object') return JSON.stringify(data.detail);
-    return `Error ${res.status}`;
-  } catch { return `HTTP ${res.status}`; }
-}
-
-async function apiPost(path, body) {
-  const res = await fetch(`${API}${path}`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(await extractError(res));
-  return res.json();
-}
-
-async function apiGet(path) {
-  const res = await fetch(`${API}${path}`);
-  if (!res.ok) throw new Error(await extractError(res));
-  return res.json();
-}
-
-// ── AUTH ───────────────────────────────────────────
+// ── AUTH ─────────────────────────────────────────────────
 
 function switchTab(tab) {
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
   document.getElementById('tab-login').classList.toggle('active', tab === 'login');
   document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  hideMsg('login-msg'); hideMsg('reg-msg');
 }
 
 async function doRegister() {
-  const username = document.getElementById('reg-user').value.trim();
+  const username = document.getElementById('reg-user').value.trim().toLowerCase();
+  const displayName = document.getElementById('reg-display').value.trim();
   const password = document.getElementById('reg-pass').value;
   hideMsg('reg-msg');
 
-  if (!username || !password) return showMsg('reg-msg', 'Please fill in all fields');
+  if (!username) return showMsg('reg-msg', 'Username is required');
   if (username.length < 3) return showMsg('reg-msg', 'Username must be at least 3 characters');
+  if (!/^[a-z0-9_]+$/.test(username)) return showMsg('reg-msg', 'Username: letters, numbers and underscores only');
+  if (!password) return showMsg('reg-msg', 'Password is required');
   if (password.length < 6) return showMsg('reg-msg', 'Password must be at least 6 characters');
 
-  setLoading('reg-btn', true);
-  showMsg('reg-msg', 'Generating your encryption keys…', 'info');
+  const users = getUsers();
+  if (users[username]) return showMsg('reg-msg', 'Username already taken');
+
+  setBtn('reg-btn', true);
+  showMsg('reg-msg', 'Generating encryption keys…', 'info');
+
   try {
     const keyPair = await generateKeyPair();
     const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
-    showMsg('reg-msg', 'Wrapping private key…', 'info');
-    const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
-    await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt });
-    await storePrivateKey(username, keyPair.privateKey);
-    // Invalidate cached user list so the new user shows up in People
-    state.usersLoaded = false;
-    showMsg('reg-msg', 'Account created! You can now sign in.', 'success');
-    setTimeout(() => { document.getElementById('login-user').value = username; switchTab('login'); hideMsg('reg-msg'); }, 1200);
+    const privKeyB64 = await exportPrivateKey(keyPair.privateKey);
+    const passwordHash = await hashPassword(password);
+
+    users[username] = {
+      passwordHash,
+      displayName: displayName || username,
+      publicKey: pubKeyB64,
+      createdAt: Date.now()
+    };
+    saveUsers(users);
+    setPrivKey(username, privKeyB64);
+
+    showMsg('reg-msg', 'Account created! Signing you in…', 'success');
+    setTimeout(() => {
+      document.getElementById('login-user').value = username;
+      document.getElementById('login-pass').value = password;
+      switchTab('login');
+      doLogin();
+    }, 800);
   } catch (e) {
-    showMsg('reg-msg', e.message);
+    showMsg('reg-msg', 'Error: ' + e.message);
   } finally {
-    setLoading('reg-btn', false);
+    setBtn('reg-btn', false, 'Create Account');
   }
 }
 
 async function doLogin() {
-  const username = document.getElementById('login-user').value.trim();
+  const username = document.getElementById('login-user').value.trim().toLowerCase();
   const password = document.getElementById('login-pass').value;
   hideMsg('login-msg');
 
   if (!username || !password) return showMsg('login-msg', 'Please fill in all fields');
 
-  setLoading('login-btn', true);
-  showMsg('login-msg', 'Authenticating…', 'info');
+  const users = getUsers();
+  const user = users[username];
+  if (!user) return showMsg('login-msg', 'No account found with that username');
+
+  setBtn('login-btn', true);
+  showMsg('login-msg', 'Verifying…', 'info');
+
   try {
-    const loginData = await apiPost('/auth/login', { username, password });
-    state.username = username;
-
-    showMsg('login-msg', 'Loading your private key…', 'info');
-    let privateKey = await loadPrivateKey(username);
-
-    if (!privateKey) {
-      const wrappedB64 = loginData.wrapped_private_key;
-      if (wrappedB64) {
-        showMsg('login-msg', 'Recovering key from server backup…', 'info');
-        try { privateKey = await unwrapPrivateKey(wrappedB64, password); await storePrivateKey(username, privateKey); }
-        catch { showMsg('login-msg', 'Key recovery failed — regenerating…', 'info'); }
-      }
-      if (!privateKey) {
-        showMsg('login-msg', 'Generating fresh keys…', 'info');
-        const keyPair = await generateKeyPair();
-        const pubKeyB64 = await exportPublicKey(keyPair.publicKey);
-        const { wrapped_private_key, pbkdf2_salt } = await wrapPrivateKey(keyPair.privateKey, password);
-        try { await apiPost('/auth/register', { username, password, public_key: pubKeyB64, display_name: username, wrapped_private_key, pbkdf2_salt }); } catch {}
-        await storePrivateKey(username, keyPair.privateKey);
-        privateKey = keyPair.privateKey;
-      }
+    const hash = await hashPassword(password);
+    if (hash !== user.passwordHash) {
+      showMsg('login-msg', 'Incorrect password');
+      return;
     }
 
-    state.keyPair = { privateKey };
+    const privKeyB64 = getPrivKey(username);
+    if (!privKeyB64) {
+      showMsg('login-msg', 'Private key not found on this device. Register again or use the original device.');
+      return;
+    }
+
+    const privateKey = await importPrivateKey(privKeyB64);
+    state.username = username;
+    state.privateKey = privateKey;
+    state.activeConv = null;
+    state.messageCache = {};
+    state.cachedPubKeys = {};
+
+    saveSession({ username });
     hideMsg('login-msg');
     enterApp();
   } catch (e) {
-    showMsg('login-msg', e.message);
+    showMsg('login-msg', 'Login error: ' + e.message);
   } finally {
-    setLoading('login-btn', false);
+    setBtn('login-btn', false, 'Sign In');
   }
 }
 
 function doLogout() {
-  if (state.pollingTimer) clearInterval(state.pollingTimer);
-  state = { username:null, keyPair:null, conversations:{}, activeConv:null, publicKeys:{}, pollingTimer:null, allUsers:[], usersLoaded:false };
+  clearSession();
+  state = { username:null, privateKey:null, activeConv:null, cachedPubKeys:{}, messageCache:{} };
   document.getElementById('app-screen').classList.remove('active');
   document.getElementById('app-screen').style.display = 'none';
   document.getElementById('auth-screen').classList.add('active');
@@ -891,21 +839,53 @@ function doLogout() {
   showToast('Signed out.', 'success');
 }
 
-// ── APP INIT ──────────────────────────────────────
+// ── APP INIT ─────────────────────────────────────────────
+
+async function bootApp() {
+  // Try restore session
+  const session = getSession();
+  if (session && session.username) {
+    const users = getUsers();
+    if (users[session.username]) {
+      const privKeyB64 = getPrivKey(session.username);
+      if (privKeyB64) {
+        try {
+          const privateKey = await importPrivateKey(privKeyB64);
+          state.username = session.username;
+          state.privateKey = privateKey;
+          enterApp();
+          return;
+        } catch {}
+      }
+    }
+    clearSession();
+  }
+  // Show auth
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('auth-screen').style.display = 'flex';
+}
 
 function enterApp() {
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').classList.add('active');
   document.getElementById('app-screen').style.display = 'flex';
-  document.getElementById('my-username-display').textContent = state.username;
-  document.getElementById('my-avatar').textContent = state.username[0].toUpperCase();
 
-  loadConversations();
-  state.pollingTimer = setInterval(loadConversations, 5000);
+  const users = getUsers();
+  const user = users[state.username] || {};
+  document.getElementById('my-username-display').textContent = user.displayName || state.username;
+  document.getElementById('my-avatar').textContent = (state.username[0] || '?').toUpperCase();
+
+  renderConvList();
+  renderPeopleList();
+  switchSidebarTab('chats');
+
+  // Poll for new incoming messages every 3s (simulate real-time)
+  if (window._pollTimer) clearInterval(window._pollTimer);
+  window._pollTimer = setInterval(checkNewMessages, 3000);
 }
 
-// ── SIDEBAR TABS ──────────────────────────────────
+// ── SIDEBAR TABS ─────────────────────────────────────────
 
 function switchSidebarTab(tab) {
   const isChats = tab === 'chats';
@@ -913,70 +893,44 @@ function switchSidebarTab(tab) {
   document.getElementById('stab-people').classList.toggle('active', !isChats);
   document.getElementById('panel-chats').style.display = isChats ? 'flex' : 'none';
   document.getElementById('panel-people').style.display = isChats ? 'none' : 'flex';
-  if (!isChats) loadPeople();
 }
 
-// ── PEOPLE PANEL ──────────────────────────────────
-
-async function loadPeople(forceRefresh = false) {
-  if (state.usersLoaded && !forceRefresh) { renderPeopleList(); return; }
-
-  const list = document.getElementById('people-list');
-  list.innerHTML = '<div style="padding:40px 20px;text-align:center"><span class="spinner"></span></div>';
-
-  try {
-    // GET /users — returns array of {username, display_name, public_key}
-    const users = await apiGet('/users');
-    state.allUsers = (Array.isArray(users) ? users : []).filter(u => u.username !== state.username);
-    state.usersLoaded = true;
-    renderPeopleList();
-  } catch (e) {
-    list.innerHTML = `
-      <div style="padding:30px 20px;text-align:center">
-        <p style="font-size:12px;color:var(--danger);font-family:var(--mono);margin-bottom:8px">${escHtml(e.message)}</p>
-        <button onclick="loadPeople(true)"
-          style="background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px">
-          Retry
-        </button>
-      </div>`;
-  }
-}
+// ── PEOPLE PANEL ─────────────────────────────────────────
 
 function renderPeopleList() {
   const list = document.getElementById('people-list');
   const q = (document.getElementById('people-search')?.value || '').toLowerCase();
-  const filtered = state.allUsers.filter(u =>
-    u.username.toLowerCase().includes(q) || (u.display_name || '').toLowerCase().includes(q)
-  );
+  const users = getUsers();
+  const otherUsers = Object.entries(users)
+    .filter(([u]) => u !== state.username)
+    .filter(([u, data]) =>
+      !q || u.includes(q) || (data.displayName || '').toLowerCase().includes(q)
+    );
 
-  if (state.allUsers.length === 0) {
-    list.innerHTML = `
-      <div style="padding:32px 20px;text-align:center">
-        <p style="font-size:13px;color:var(--text3);font-family:var(--mono);margin-bottom:6px">No other users found.</p>
-        <p style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">The server may have restarted.<br/>Ask contacts to re-register, then click ↺ to refresh.</p>
-        <button onclick="loadPeople(true)"
-          style="margin-top:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:600">
-          ↺ Refresh
-        </button>
-      </div>`;
+  if (Object.keys(users).filter(u => u !== state.username).length === 0) {
+    list.innerHTML = `<div style="padding:32px 20px;text-align:center">
+      <p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No other users yet.</p>
+      <p style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:6px;line-height:1.7">Register another account to start chatting.</p>
+    </div>`;
     return;
   }
 
-  if (filtered.length === 0) {
+  if (otherUsers.length === 0) {
     list.innerHTML = '<div style="padding:24px 20px;text-align:center"><p style="font-size:13px;color:var(--text3);font-family:var(--mono)">No users match your search.</p></div>';
     return;
   }
 
-  list.innerHTML = filtered.map(u => {
-    const hasConv = !!state.conversations[u.username];
-    return `<div class="people-item" onclick="startChatWith('${escHtml(u.username)}')">
-      <div class="conv-avatar">${u.username[0].toUpperCase()}</div>
+  list.innerHTML = otherUsers.map(([username, data]) => {
+    const msgs = getConvMessages(username);
+    const hasConv = msgs.length > 0;
+    return `<div class="people-item" onclick="startChatWith('${escHtml(username)}')">
+      <div class="conv-avatar">${username[0].toUpperCase()}</div>
       <div class="conv-meta">
-        <div class="conv-name">${escHtml(u.display_name || u.username)}</div>
-        <div class="conv-preview" style="color:var(--text3)">@${escHtml(u.username)}${hasConv ? ' · <span style="color:var(--accent)">existing chat</span>' : ''}</div>
+        <div class="conv-name">${escHtml(data.displayName || username)}</div>
+        <div class="conv-preview" style="color:var(--text3)">@${escHtml(username)}${hasConv ? ' · <span style="color:var(--accent)">existing chat</span>' : ''}</div>
       </div>
-      <button class="people-msg-btn" title="Message ${escHtml(u.username)}"
-        onclick="event.stopPropagation();startChatWith('${escHtml(u.username)}')">
+      <button class="people-msg-btn" title="Message"
+        onclick="event.stopPropagation();startChatWith('${escHtml(username)}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
@@ -985,73 +939,69 @@ function renderPeopleList() {
   }).join('');
 }
 
-function filterPeople() { renderPeopleList(); }
-
 function startChatWith(username) {
-  if (!state.conversations[username]) state.conversations[username] = [];
   switchSidebarTab('chats');
-  renderConvList();
   openConversation(username);
+  renderConvList();
 }
 
-// ── CONVERSATIONS ──────────────────────────────────
+// ── CONVERSATIONS ─────────────────────────────────────────
 
-async function loadConversations() {
-  try {
-    const msgs = await apiGet(`/messages/${encodeURIComponent(state.username)}`);
-    const list = Array.isArray(msgs) ? msgs : [];
+function getConvMessages(partner) {
+  const all = getMessages();
+  return all.filter(m =>
+    (m.sender === state.username && m.recipient === partner) ||
+    (m.sender === partner && m.recipient === state.username)
+  ).sort((a, b) => a.id - b.id);
+}
 
-    const convs = {};
-    for (const msg of list) {
-      const partner = msg.sender === state.username ? msg.recipient : msg.sender;
-      if (!partner) continue;
-      if (!convs[partner]) convs[partner] = [];
-      convs[partner].push(msg);
-    }
-
-    for (const [partner, newMsgs] of Object.entries(convs)) {
-      const existing = state.conversations[partner] || [];
-      const existingIds = new Set(existing.map(m => m.id));
-      const fresh = newMsgs.filter(m => !existingIds.has(m.id));
-      if (fresh.length > 0) {
-        state.conversations[partner] = [...existing, ...fresh].sort((a, b) => a.id - b.id);
-        if (state.activeConv !== partner && fresh.some(m => m.sender !== state.username)) {
-          showToast(`New message from ${partner}`, 'success');
-        }
-      }
-    }
-
-    renderConvList();
-    if (state.activeConv) renderMessages(state.activeConv);
-  } catch { /* silent fail on polling */ }
+function getConvPartners() {
+  const all = getMessages();
+  const partners = new Set();
+  for (const m of all) {
+    if (m.sender === state.username) partners.add(m.recipient);
+    if (m.recipient === state.username) partners.add(m.sender);
+  }
+  return [...partners];
 }
 
 function renderConvList() {
   const list = document.getElementById('conv-list');
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const partners = Object.keys(state.conversations)
-    .filter(p => p.toLowerCase().includes(search) && state.conversations[p].length > 0)
-    .sort((a, b) => {
-      const aLast = state.conversations[a].at(-1)?.timestamp ?? 0;
-      const bLast = state.conversations[b].at(-1)?.timestamp ?? 0;
-      return bLast - aLast;
-    });
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const users = getUsers();
+
+  const partners = getConvPartners()
+    .filter(p => !q || p.includes(q) || (users[p]?.displayName || '').toLowerCase().includes(q));
+
+  // Sort by last message time
+  const allMsgs = getMessages();
+  partners.sort((a, b) => {
+    const aLast = allMsgs.filter(m => m.sender===a||m.recipient===a).at(-1)?.timestamp ?? 0;
+    const bLast = allMsgs.filter(m => m.sender===b||m.recipient===b).at(-1)?.timestamp ?? 0;
+    return bLast - aLast;
+  });
 
   if (partners.length === 0) {
-    list.innerHTML = '<div style="padding:40px 20px;text-align:center"><p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Go to <strong style="color:var(--text2)">People</strong> to find users.</p></div>';
+    list.innerHTML = `<div style="padding:40px 20px;text-align:center">
+      <p style="font-size:13px;color:var(--text3)">No conversations yet.<br/>Go to <strong style="color:var(--text2)">People</strong> to find users.</p>
+    </div>`;
     return;
   }
 
   list.innerHTML = partners.map(partner => {
-    const msgs = state.conversations[partner];
+    const msgs = getConvMessages(partner);
     const last = msgs.at(-1);
     const isActive = state.activeConv === partner;
     const time = last ? formatTime(last.timestamp) : '';
-    const preview = last?._decrypted ? last._decrypted.slice(0, 40) : '🔒 Encrypted';
+    const cached = state.messageCache[partner];
+    const lastCached = cached?.find(c => c.msg.id === last?.id);
+    const preview = lastCached?._decrypted ? lastCached._decrypted.slice(0, 40) : (last ? '🔒 Encrypted' : '');
+    const displayName = users[partner]?.displayName || partner;
+
     return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="openConversation('${escHtml(partner)}')">
       <div class="conv-avatar">${partner[0].toUpperCase()}</div>
       <div class="conv-meta">
-        <div class="conv-name">${escHtml(partner)}</div>
+        <div class="conv-name">${escHtml(displayName)}</div>
         <div class="conv-preview">${escHtml(preview)}</div>
       </div>
       <div class="conv-time">${time}</div>
@@ -1059,31 +1009,22 @@ function renderConvList() {
   }).join('');
 }
 
-function filterConvs() { renderConvList(); }
-
-function formatTime(ts) {
-  if (!ts) return '';
-  const d = new Date(typeof ts === 'number' ? ts * 1000 : ts);
-  const diff = Date.now() - d;
-  if (diff < 60000) return 'now';
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
-  if (diff < 86400000) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-  return d.toLocaleDateString([], { month:'short', day:'numeric' });
-}
-
-// ── OPEN CONVERSATION ─────────────────────────────
+// ── OPEN CONVERSATION ─────────────────────────────────────
 
 async function openConversation(partner) {
   state.activeConv = partner;
   renderConvList();
 
+  const users = getUsers();
+  const partnerData = users[partner] || {};
   const main = document.getElementById('chat-main');
+
   main.innerHTML = `
     <div class="chat-header">
       <div class="chat-header-info">
         <div class="chat-header-avatar">${partner[0].toUpperCase()}</div>
         <div>
-          <div class="chat-header-name">${escHtml(partner)}</div>
+          <div class="chat-header-name">${escHtml(partnerData.displayName || partner)}</div>
           <div class="chat-header-sub"><div class="key-dot"></div>End-to-end encrypted</div>
         </div>
       </div>
@@ -1095,12 +1036,13 @@ async function openConversation(partner) {
       </div>
     </div>
     <div class="messages-area" id="messages-area">
-      <div class="sys-msg"><span>Messages are end-to-end encrypted. WhisperBox cannot read them.</span></div>
+      <div class="sys-msg"><span>Messages are end-to-end encrypted</span></div>
+      <div style="text-align:center;padding:20px"><span class="spinner"></span></div>
     </div>
     <div class="composer">
       <div class="composer-inner">
         <textarea class="composer-input" id="composer-input" rows="1"
-          placeholder="Message ${escHtml(partner)}…"
+          placeholder="Message ${escHtml(partnerData.displayName || partner)}…"
           onkeydown="handleComposerKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="send-btn" onclick="sendMessage()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1112,48 +1054,60 @@ async function openConversation(partner) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
-        Encrypted before sending · Server stores ciphertext only
+        Encrypted before sending · Stored as ciphertext only
       </div>
     </div>`;
 
-  renderMessages(partner);
+  await renderMessages(partner);
+  document.getElementById('composer-input')?.focus();
 }
 
 async function renderMessages(partner) {
   const area = document.getElementById('messages-area');
   if (!area) return;
-  const msgs = state.conversations[partner] || [];
-  area.innerHTML = '<div class="sys-msg"><span>Messages are end-to-end encrypted. WhisperBox cannot read them.</span></div>';
+
+  const msgs = getConvMessages(partner);
+
+  // Init cache for this partner
+  if (!state.messageCache[partner]) state.messageCache[partner] = [];
+  const cache = state.messageCache[partner];
+
+  area.innerHTML = '<div class="sys-msg"><span>Messages are end-to-end encrypted</span></div>';
 
   for (const msg of msgs) {
     const isMe = msg.sender === state.username;
     const wrap = document.createElement('div');
     wrap.className = `msg-wrap ${isMe ? 'me' : 'them'}`;
 
-    let text = msg._decrypted;
-    if (text === undefined) {
-      try {
-        const ek = msg.encrypted_key || msg.encryptedKey;
-        const ct = msg.ciphertext || msg.content;
-        const iv = msg.iv;
-        if (ek && ct && iv) {
-          text = await decryptMessage(ct, iv, ek, state.keyPair.privateKey);
-        } else { text = '[Unknown message format]'; }
-        msg._decrypted = text;
-      } catch {
-        text = '[Decryption failed — key mismatch]';
-        msg._decrypted = text;
+    // Find cached decrypted text
+    let cached = cache.find(c => c.msg.id === msg.id);
+    let text, failed = false;
+
+    if (cached) {
+      text = cached._decrypted;
+      failed = cached._failed;
+    } else {
+      if (isMe && msg._plaintext) {
+        // Sender stored plaintext in-memory
+        text = msg._plaintext;
+      } else {
+        try {
+          text = await decryptMessage(msg.ciphertext, msg.iv, msg.encrypted_key, state.privateKey);
+        } catch {
+          text = '[Decryption failed]';
+          failed = true;
+        }
       }
+      cache.push({ msg, _decrypted: text, _failed: failed });
     }
 
-    const failed = text.startsWith('[');
     const ts = formatTime(msg.timestamp);
     const initials = (isMe ? state.username : partner)[0].toUpperCase();
 
     wrap.innerHTML = `
       ${!isMe ? `<div class="msg-avatar">${initials}</div>` : ''}
       <div>
-        <div class="msg-bubble ${failed ? 'msg-error' : ''}">${escHtml(text)}</div>
+        <div class="msg-bubble${failed ? '" style="color:var(--danger);font-style:italic' : ''}">${escHtml(text)}</div>
         <div class="msg-meta">${ts} <span class="msg-enc-tick">🔒</span></div>
       </div>
       ${isMe ? `<div class="msg-avatar">${initials}</div>` : ''}`;
@@ -1163,100 +1117,114 @@ async function renderMessages(partner) {
   area.scrollTop = area.scrollHeight;
 }
 
-// ── SEND ──────────────────────────────────────────
+// ── SEND MESSAGE ─────────────────────────────────────────
 
 async function getRecipientPublicKey(username) {
-  if (state.publicKeys[username]) return state.publicKeys[username];
-  const data = await apiGet(`/users/${encodeURIComponent(username)}`);
-  const pubKeyB64 = data.public_key || data.publicKey;
-  if (!pubKeyB64) throw new Error(`No public key found for ${username}`);
-  const key = await importPublicKey(pubKeyB64);
-  state.publicKeys[username] = key;
+  if (state.cachedPubKeys[username]) return state.cachedPubKeys[username];
+  const users = getUsers();
+  const user = users[username];
+  if (!user) throw new Error(`User "${username}" not found`);
+  if (!user.publicKey) throw new Error(`No public key for "${username}"`);
+  const key = await importPublicKey(user.publicKey);
+  state.cachedPubKeys[username] = key;
   return key;
 }
 
 async function sendMessage() {
   const input = document.getElementById('composer-input');
-  const plaintext = input.value.trim();
+  const plaintext = input?.value.trim();
   if (!plaintext) return;
 
   const partner = state.activeConv;
   const btn = document.getElementById('send-btn');
-  btn.disabled = true; input.disabled = true;
+  if (btn) btn.disabled = true;
+  if (input) input.disabled = true;
 
   try {
     const recipientKey = await getRecipientPublicKey(partner);
-    const { ciphertext, iv, encryptedKey } = await encryptMessage(plaintext, recipientKey);
+    const { ciphertext, iv, encrypted_key } = await encryptMessage(plaintext, recipientKey);
 
-    const result = await apiPost('/messages', {
-      sender: state.username, recipient: partner,
-      ciphertext, iv, encrypted_key: encryptedKey,
-    });
-
-    const localMsg = {
-      id: result.id || Date.now(), sender: state.username, recipient: partner,
-      ciphertext, iv, encrypted_key: encryptedKey,
-      timestamp: Date.now() / 1000, _decrypted: plaintext,
+    const allMsgs = getMessages();
+    const id = Date.now();
+    const msg = {
+      id, sender: state.username, recipient: partner,
+      ciphertext, iv, encrypted_key,
+      timestamp: Date.now()
     };
-    if (!state.conversations[partner]) state.conversations[partner] = [];
-    state.conversations[partner].push(localMsg);
+    allMsgs.push(msg);
+    saveMessages(allMsgs);
 
-    input.value = ''; input.style.height = 'auto';
-    renderMessages(partner); renderConvList();
+    // Cache plaintext for sender's own view
+    if (!state.messageCache[partner]) state.messageCache[partner] = [];
+    state.messageCache[partner].push({ msg, _decrypted: plaintext, _failed: false });
+
+    if (input) { input.value = ''; input.style.height = 'auto'; }
+    await renderMessages(partner);
+    renderConvList();
   } catch (e) {
-    showToast(`Send failed: ${e.message}`, 'error');
+    showToast('Send failed: ' + e.message, 'error');
   } finally {
-    btn.disabled = false; input.disabled = false; input.focus();
+    if (btn) btn.disabled = false;
+    if (input) { input.disabled = false; input.focus(); }
   }
 }
 
-// ── NEW MESSAGE MODAL ─────────────────────────────
+// ── POLL FOR NEW MESSAGES ─────────────────────────────────
+
+let _lastMsgCount = 0;
+async function checkNewMessages() {
+  const all = getMessages();
+  if (all.length === _lastMsgCount) return;
+
+  const newMsgs = all.slice(_lastMsgCount).filter(m => m.recipient === state.username);
+  _lastMsgCount = all.length;
+
+  for (const msg of newMsgs) {
+    if (msg.sender !== state.activeConv) {
+      const users = getUsers();
+      const name = users[msg.sender]?.displayName || msg.sender;
+      showToast(`New message from ${name}`, 'success');
+    }
+  }
+
+  renderConvList();
+  if (state.activeConv) await renderMessages(state.activeConv);
+}
+
+// ── NEW MESSAGE MODAL ─────────────────────────────────────
 
 let selectedRecipient = null;
 
-async function openNewMsg() {
+function openNewMsg() {
   selectedRecipient = null;
   document.getElementById('new-msg-recipient').value = '';
   document.getElementById('new-msg-body').value = '';
   hideMsg('new-msg-error');
   document.getElementById('new-msg-modal').classList.add('open');
-  setTimeout(() => document.getElementById('new-msg-body').focus(), 100);
-  await loadModalUsers();
-}
-
-async function loadModalUsers() {
-  const listEl = document.getElementById('modal-user-list');
-  if (!state.usersLoaded) {
-    listEl.innerHTML = '<div class="user-pick-empty"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></div>';
-    try {
-      const users = await apiGet('/users');
-      state.allUsers = (Array.isArray(users) ? users : []).filter(u => u.username !== state.username);
-      state.usersLoaded = true;
-    } catch (e) {
-      listEl.innerHTML = `<div class="user-pick-empty" style="color:var(--danger)">${escHtml(e.message)}</div>`;
-      return;
-    }
-  }
   renderModalUsers('');
+  setTimeout(() => document.getElementById('new-msg-body').focus(), 100);
 }
 
 function renderModalUsers(q) {
   const listEl = document.getElementById('modal-user-list');
-  const filtered = state.allUsers.filter(u =>
-    !q || u.username.toLowerCase().includes(q) || (u.display_name || '').toLowerCase().includes(q)
+  const users = getUsers();
+  const others = Object.entries(users).filter(([u]) => u !== state.username);
+  const filtered = others.filter(([u, d]) =>
+    !q || u.includes(q.toLowerCase()) || (d.displayName || '').toLowerCase().includes(q.toLowerCase())
   );
+
   if (filtered.length === 0) {
-    listEl.innerHTML = `<div class="user-pick-empty">${state.allUsers.length === 0 ? 'No other users registered yet.' : 'No users match your search.'}</div>`;
+    listEl.innerHTML = `<div class="user-pick-empty">${others.length === 0 ? 'No other users registered yet.' : 'No users match.'}</div>`;
     return;
   }
-  listEl.innerHTML = filtered.slice(0, 8).map(u => `
-    <div class="user-pick-item ${selectedRecipient === u.username ? 'selected' : ''}"
-         id="upick-${escHtml(u.username)}"
-         onclick="selectRecipient('${escHtml(u.username)}')">
-      <div class="user-pick-avatar">${u.username[0].toUpperCase()}</div>
+
+  listEl.innerHTML = filtered.slice(0, 8).map(([username, data]) => `
+    <div class="user-pick-item ${selectedRecipient === username ? 'selected' : ''}"
+         onclick="selectRecipient('${escHtml(username)}')">
+      <div class="user-pick-avatar">${username[0].toUpperCase()}</div>
       <div style="flex:1;min-width:0">
-        <div class="user-pick-name">${escHtml(u.display_name || u.username)}</div>
-        <div class="user-pick-handle">@${escHtml(u.username)}</div>
+        <div class="user-pick-name">${escHtml(data.displayName || username)}</div>
+        <div class="user-pick-handle">@${escHtml(username)}</div>
       </div>
       <div class="user-pick-tick">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1269,13 +1237,13 @@ function renderModalUsers(q) {
 function selectRecipient(username) {
   selectedRecipient = username;
   document.getElementById('new-msg-recipient').value = username;
-  renderModalUsers(document.getElementById('new-msg-recipient').value.toLowerCase());
+  renderModalUsers(username);
 }
 
 function onRecipientInput() {
   const val = document.getElementById('new-msg-recipient').value.trim();
   if (val !== selectedRecipient) selectedRecipient = null;
-  renderModalUsers(val.toLowerCase());
+  renderModalUsers(val);
 }
 
 function closeNewMsg() {
@@ -1284,7 +1252,7 @@ function closeNewMsg() {
 }
 
 async function sendNewMsg() {
-  const recipientInput = document.getElementById('new-msg-recipient').value.trim();
+  const recipientInput = document.getElementById('new-msg-recipient').value.trim().toLowerCase();
   const recipient = selectedRecipient || recipientInput;
   const body = document.getElementById('new-msg-body').value.trim();
   hideMsg('new-msg-error');
@@ -1293,23 +1261,23 @@ async function sendNewMsg() {
   if (!body) return showMsg('new-msg-error', 'Please enter a message');
   if (recipient === state.username) return showMsg('new-msg-error', "You can't message yourself");
 
+  const users = getUsers();
+  if (!users[recipient]) return showMsg('new-msg-error', `User "${recipient}" not found`);
+
   showMsg('new-msg-error', 'Encrypting…', 'info');
 
   try {
     const recipientKey = await getRecipientPublicKey(recipient);
-    const { ciphertext, iv, encryptedKey } = await encryptMessage(body, recipientKey);
-    const result = await apiPost('/messages', {
-      sender: state.username, recipient,
-      ciphertext, iv, encrypted_key: encryptedKey,
-    });
+    const { ciphertext, iv, encrypted_key } = await encryptMessage(body, recipientKey);
 
-    const localMsg = {
-      id: result.id || Date.now(), sender: state.username, recipient,
-      ciphertext, iv, encrypted_key: encryptedKey,
-      timestamp: Date.now() / 1000, _decrypted: body,
-    };
-    if (!state.conversations[recipient]) state.conversations[recipient] = [];
-    state.conversations[recipient].push(localMsg);
+    const allMsgs = getMessages();
+    const id = Date.now();
+    const msg = { id, sender: state.username, recipient, ciphertext, iv, encrypted_key, timestamp: Date.now() };
+    allMsgs.push(msg);
+    saveMessages(allMsgs);
+
+    if (!state.messageCache[recipient]) state.messageCache[recipient] = [];
+    state.messageCache[recipient].push({ msg, _decrypted: body, _failed: false });
 
     closeNewMsg();
     showToast('Message encrypted and sent', 'success');
@@ -1321,7 +1289,7 @@ async function sendNewMsg() {
   }
 }
 
-// ── UI HELPERS ────────────────────────────────────
+// ── UI HELPERS ────────────────────────────────────────────
 
 function handleComposerKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -1332,23 +1300,21 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
-// Close modal on backdrop click
 document.getElementById('new-msg-modal').addEventListener('click', function(e) {
   if (e.target === this) closeNewMsg();
 });
 
-// Enter to submit on auth forms
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
-    const loginForm = document.getElementById('login-form');
-    const regForm = document.getElementById('register-form');
-    if (loginForm.style.display !== 'none' && document.activeElement?.closest('#login-form')) doLogin();
-    if (regForm.style.display !== 'none' && document.activeElement?.closest('#register-form')) doRegister();
+    if (document.getElementById('login-form').style.display !== 'none' &&
+        document.activeElement?.closest('#login-form')) doLogin();
+    if (document.getElementById('register-form').style.display !== 'none' &&
+        document.activeElement?.closest('#register-form')) doRegister();
   }
 });
 
-console.log('%c WhisperBox E2EE ', 'background:#00e5b4;color:#0a0c0f;font-weight:bold;padding:4px 8px;border-radius:4px;');
-console.log('Private keys stored in IndexedDB — never leave this device.');
+// ── BOOT ─────────────────────────────────────────────────
+bootApp();
 </script>
 </body>
 </html>
